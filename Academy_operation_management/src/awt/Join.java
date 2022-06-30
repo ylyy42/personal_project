@@ -109,22 +109,6 @@ public class Join extends JFrame {
 		joinCompleteBtn.setBounds(206, 504, 139, 29);
 		contentPane.add(joinCompleteBtn);
 		
-		JLabel lblNewLabel = new JLabel("성별");
-		lblNewLabel.setBounds(69, 396, 57, 15);
-		contentPane.add(lblNewLabel);
-		
-		chckbxNewCheckBox = new JCheckBox("남");
-		chckbxNewCheckBox.setBounds(161, 392, 48, 23);
-		contentPane.add(chckbxNewCheckBox);
-		
-		chckbxNewCheckBox_1 = new JCheckBox("여");
-		chckbxNewCheckBox_1.setBounds(215, 392, 57, 23);
-		contentPane.add(chckbxNewCheckBox_1);
-		
-		ButtonGroup group = new ButtonGroup();
-		group.add(chckbxNewCheckBox);
-		group.add(chckbxNewCheckBox_1);
-		
 		lblNewLabel_1 = new JLabel("주민등록번호");
 		lblNewLabel_1.setBounds(69, 260, 77, 15);
 		contentPane.add(lblNewLabel_1);
@@ -143,7 +127,6 @@ public class Join extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String pw = "";
-				String gender = "";
 				char[] secret_pw = tfPassword.getPassword();
 				
 				for(char cha : secret_pw) {
@@ -152,16 +135,11 @@ public class Join extends JFrame {
 					pw += (pw.equals("")) ? "" + cha + "" : "" + cha + "";
 				}
 				
-				if(chckbxNewCheckBox.isSelected()) {
-					gender = "남";
-				}
-				
-				if(chckbxNewCheckBox_1.isSelected()) {
-					gender = "여";
-				}
-				
-				JoinVo vo = new JoinVo(tfUsername.getText(), tfName.getText(), pw, textField.getText(), 
-						tfPhone.getText(), tfEmail.getText(), gender);
+				ManagerService managerService = new ManagerService(new ManagerDao());
+				ManagerVo vo = new ManagerVo(1, tfUsername.getText(), tfName.getText(), pw, textField.getText(),
+						tfPhone.getText(), tfEmail.getText());
+				System.out.println(vo.getEmail());
+				managerService.regist(vo);
 				
 				JOptionPane.showMessageDialog(null, "회원가입이 완료되었습니다.");
 				dispose();

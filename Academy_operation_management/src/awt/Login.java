@@ -7,13 +7,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
 public class Login extends WindowAdapter implements ActionListener {
 
-	private MemberDAO dao;
+	private ManagerDao dao;
 	private JFrame f;
 	private JButton btn, subtn;
 	private Label lid;
@@ -23,7 +24,7 @@ public class Login extends WindowAdapter implements ActionListener {
 	private TextField tfMsg;
 
 	public Login() {
-		dao = new MemberDAO();
+		dao = new ManagerDao();
 		f = new JFrame();
 		btn = new JButton("로그인");
 		subtn = new JButton("회원가입");
@@ -70,9 +71,16 @@ public class Login extends WindowAdapter implements ActionListener {
 				System.out.println(id.getText());
 				System.out.println(pwd.getText());
 
-				MemberVo vo = new MemberVo(id.getText(), pwd.getText());
-				boolean b = dao.list(vo);
-				tfMsg.setText(String.valueOf(b));
+				ManagerService managerService = new ManagerService(new ManagerDao());
+				ManagerVo vo = new ManagerVo(id.getText(), pwd.getText());
+				
+				if(managerService.login(vo) == true) {
+					tfMsg.setText("로그인 성공");
+				} else {
+					tfMsg.setText("아이디/비밀번호가 일치하지 않습니다.");
+				}
+				
+				
 			}
 		}
 

@@ -1,29 +1,33 @@
 package awt;
 
-public class JoinVo {
+public class ManagerVo {
+	private int num;
 	private String name;
 	private String id;
 	private String password;
 	private String residentId;
 	private String phone;
 	private String email;
-	private String gender;
 
-	public JoinVo() {
-
+	public ManagerVo(String id, String password) {
+		this.id = id;
+		this.password = password;
 	}
 
-	public JoinVo(String name, String id, String password, String residentId, String phone, String email,
-			String gender) {
+	public ManagerVo(int num, String name, String id, String password, String residentId, String phone, String email) {
+		this.num = num;
 		this.name = name;
 		this.id = id;
 		this.password = password;
 		this.residentId = residentId;
 		this.phone = phone;
 		this.email = email;
-		this.gender = gender;
 	}
-
+	
+	public int getNum() {
+		return num;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -46,10 +50,6 @@ public class JoinVo {
 
 	public String getEmail() {
 		return email;
-	}
-
-	public String getGender() {
-		return gender;
 	}
 
 }
