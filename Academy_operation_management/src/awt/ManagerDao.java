@@ -76,7 +76,7 @@ public class ManagerDao {
 			conn = util.getConnection();
 
 			System.out.println("접속성공");
-			pstmt = conn.prepareStatement("select * from member where num = ?");
+			pstmt = conn.prepareStatement("select * from manager where num = ?");
 			pstmt.setInt(1, num); // 첫번째 물음표에 num를 넣는다.
 			rs = pstmt.executeQuery();
 
@@ -128,7 +128,7 @@ public class ManagerDao {
 			conn = util.getConnection();
 
 			System.out.println("접속성공");
-			pstmt = conn.prepareStatement("select * from member");
+			pstmt = conn.prepareStatement("select * from manager");
 			rs = pstmt.executeQuery();
 
 			// 값을가져오는부분
