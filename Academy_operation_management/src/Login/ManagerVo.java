@@ -1,4 +1,4 @@
-package awt;
+package Login;
 
 public class ManagerVo {
 	private int num;
@@ -8,6 +8,10 @@ public class ManagerVo {
 	private String residentId;
 	private String phone;
 	private String email;
+	
+	public ManagerVo(String id) {
+		this.id = id;
+	}
 
 	public ManagerVo(String id, String password) {
 		this.id = id;

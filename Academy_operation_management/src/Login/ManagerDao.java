@@ -1,4 +1,4 @@
-package awt;
+package Login;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -319,4 +319,63 @@ public class ManagerDao {
 
 		return false;
 	}
+	
+	// 아이디 중복확인체크
+	public boolean check(ManagerVo vo) {
+		Connection conn = null; // 데이터베이스 연결을 위한 커넥션 객체
+		Statement stmt = null; // 쿼리문사용을위한
+		ResultSet rs = null;
+
+		try {
+			conn = util.getConnection();
+
+			System.out.println("접속성공");
+			String query = "SELECT * FROM manager WHERE id = '" + vo.getId() + "'";
+
+			stmt = conn.prepareStatement(query);
+			System.out.println(query);
+			
+			stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			rs = stmt.executeQuery(query);
+			rs.last();
+
+			if (rs.getRow() == 0) {
+				System.out.println("중복되는 아이디가 없습니다.");
+			} else {
+				System.out.println("중복되는 아이디가 있습니다.");
+				return false;
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (stmt != null) {
+				try {
+					stmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return true;
+	}
+	
 }

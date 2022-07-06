@@ -1,4 +1,4 @@
-package awt;
+package Login;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -29,6 +29,7 @@ public class Join extends JFrame {
 	private JCheckBox chckbxNewCheckBox_1;
 	private JLabel lblNewLabel_1;
 	private JTextField textField;
+	private boolean idCheck = false;
 
 	public static void main(String[] args) {
 //		EventQueue.invokeLater(new Runnable() {
@@ -45,8 +46,10 @@ public class Join extends JFrame {
 	}
 
 	public Join() {
+		ManagerService managerService = new ManagerService(new ManagerDao());
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(430, 600);
+		setSize(430, 509);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -55,8 +58,8 @@ public class Join extends JFrame {
 		
 		lblJoin = new JLabel("회원가입");
 		Font f1 = new Font("돋움", Font.BOLD, 20); //궁서 바탕 돋움
-		lblJoin.setFont(f1); 
-		lblJoin.setBounds(159, 41, 101, 20);
+		lblJoin.setFont(new Font("돋움", Font.BOLD, 25)); 
+		lblJoin.setBounds(148, 34, 131, 35);
 		contentPane.add(lblJoin);
 		
 		JLabel lblUsername = new JLabel("비밀번호");
@@ -81,32 +84,32 @@ public class Join extends JFrame {
 		
 		tfUsername = new JTextField();
 		tfUsername.setColumns(10);
-		tfUsername.setBounds(159, 115, 186, 35);
+		tfUsername.setBounds(148, 115, 164, 35);
 		contentPane.add(tfUsername);
 		
 		tfPassword = new JPasswordField();
 		tfPassword.setColumns(10);
-		tfPassword.setBounds(159, 205, 186, 35);
+		tfPassword.setBounds(148, 205, 164, 35);
 		tfPassword.setEchoChar('*');
 		contentPane.add(tfPassword);
 		
 		tfName = new JTextField();
 		tfName.setColumns(10);
-		tfName.setBounds(159, 160, 186, 35);
+		tfName.setBounds(148, 160, 164, 35);
 		contentPane.add(tfName);
 		
 		tfEmail = new JTextField();
 		tfEmail.setColumns(10);
-		tfEmail.setBounds(159, 342, 186, 35);
+		tfEmail.setBounds(148, 342, 164, 35);
 		contentPane.add(tfEmail);
 		
 		tfPhone = new JTextField();
 		tfPhone.setColumns(10);
-		tfPhone.setBounds(159, 297, 186, 35);
+		tfPhone.setBounds(148, 297, 164, 35);
 		contentPane.add(tfPhone);
 		
 		joinCompleteBtn = new JButton("회원가입완료");
-		joinCompleteBtn.setBounds(206, 504, 139, 29);
+		joinCompleteBtn.setBounds(140, 410, 139, 29);
 		contentPane.add(joinCompleteBtn);
 		
 		lblNewLabel_1 = new JLabel("주민등록번호");
@@ -115,8 +118,29 @@ public class Join extends JFrame {
 		
 		textField = new JTextField();
 		textField.setColumns(10);
-		textField.setBounds(159, 250, 186, 35);
+		textField.setBounds(148, 250, 164, 35);
 		contentPane.add(textField);
+		
+		JButton btnNewButton = new JButton("\uC911\uBCF5\uD655\uC778");
+		btnNewButton.setFont(new Font("굴림", Font.PLAIN, 11));
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ManagerVo vo = new ManagerVo(tfName.getText());
+				
+				if(vo.getId().equals("")) {
+					idCheck = false;
+					JOptionPane.showMessageDialog(null, "아이디를 입력해주세요.");
+				} else if(managerService.check(vo) == false) {
+					idCheck = false;
+					JOptionPane.showMessageDialog(null, "중복되는 아이디가 있습니다. 아이디를 변경해주세요");
+				} else {
+					idCheck = true;
+					JOptionPane.showMessageDialog(null, "아이디 사용이 가능합니다.");
+				}
+			}
+		});
+		btnNewButton.setBounds(321, 167, 81, 20);
+		contentPane.add(btnNewButton);
 		
 		setVisible(true);
 		
@@ -135,14 +159,17 @@ public class Join extends JFrame {
 					pw += (pw.equals("")) ? "" + cha + "" : "" + cha + "";
 				}
 				
-				ManagerService managerService = new ManagerService(new ManagerDao());
-				ManagerVo vo = new ManagerVo(1, tfUsername.getText(), tfName.getText(), pw, textField.getText(),
-						tfPhone.getText(), tfEmail.getText());
-				System.out.println(vo.getEmail());
-				managerService.regist(vo);
 				
-				JOptionPane.showMessageDialog(null, "회원가입이 완료되었습니다.");
-				dispose();
+				if(idCheck == true) {
+					ManagerVo vo = new ManagerVo(1, tfUsername.getText(), tfName.getText(), pw, textField.getText(),
+							tfPhone.getText(), tfEmail.getText());
+					managerService.regist(vo);
+					JOptionPane.showMessageDialog(null, "회원가입이 완료되었습니다.");
+					dispose();
+				} else {
+					JOptionPane.showMessageDialog(null, "아이디 중복체크를 해주세요.");
+				}
+				
 			}
 		});
 

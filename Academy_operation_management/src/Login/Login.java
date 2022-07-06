@@ -1,4 +1,4 @@
-package awt;
+package Login;
 
 import java.awt.FlowLayout;
 import java.awt.Label;
@@ -11,6 +11,10 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.Font;
 
 public class Login extends WindowAdapter implements ActionListener {
 
@@ -21,22 +25,30 @@ public class Login extends WindowAdapter implements ActionListener {
 	private Label lpwd;
 	private TextField id;
 	private TextField pwd;
-	private TextField tfMsg;
 
 	public Login() {
 		dao = new ManagerDao();
 		f = new JFrame();
 		btn = new JButton("로그인");
+		btn.setSize(100, 30);
+		btn.setLocation(143, 174);
 		subtn = new JButton("회원가입");
-		f.setSize(650, 120);
-		f.setLayout(new FlowLayout());
-		lid = new Label("ID : ", Label.RIGHT);
-		lpwd = new Label("Password : ", Label.RIGHT);
+		subtn.setLocation(275, 174);
+		subtn.setSize(100, 30);
+		f.setSize(543, 287);
+		f.getContentPane().setLayout(null);
+		lid = new Label("\uC544\uC774\uB514", Label.RIGHT);
+		lid.setSize(50, 20);
+		lid.setLocation(67, 120);
+		lpwd = new Label("\uBE44\uBC00\uBC88\uD638", Label.RIGHT);
+		lpwd.setSize(73, 20);
+		lpwd.setLocation(233, 120);
 		id = new TextField(10);
+		id.setSize(100, 20);
+		id.setLocation(123, 120);
 		pwd = new TextField(10);
-		tfMsg = new TextField(40);
-		tfMsg.setEditable(false);
-		tfMsg.setFocusable(false);
+		pwd.setSize(100, 20);
+		pwd.setLocation(324, 120);
 	}
 
 	public void windowClosing(WindowEvent e) {
@@ -48,13 +60,17 @@ public class Login extends WindowAdapter implements ActionListener {
 		btn.addActionListener(this);
 		subtn.addActionListener(this);
 		f.addWindowListener(this);
-		f.add(lid);
-		f.add(id);
-		f.add(lpwd);
-		f.add(pwd);
-		f.add(btn);
-		f.add(subtn);
-		f.add(tfMsg);
+		f.getContentPane().add(lid);
+		f.getContentPane().add(id);
+		f.getContentPane().add(lpwd);
+		f.getContentPane().add(pwd);
+		f.getContentPane().add(btn);
+		f.getContentPane().add(subtn);
+		
+		JLabel lblNewLabel = new JLabel("\uD559\uC6D0 \uAD00\uB9AC \uD504\uB85C\uADF8\uB7A8");
+		lblNewLabel.setFont(new Font("굴림", Font.BOLD, 25));
+		lblNewLabel.setBounds(143, 27, 244, 48);
+		f.getContentPane().add(lblNewLabel);
 		f.setLocationRelativeTo(null);
 		f.setVisible(true);
 	}
@@ -64,9 +80,9 @@ public class Login extends WindowAdapter implements ActionListener {
 
 		if (e.getActionCommand().equals("로그인")) {
 			if (id.getText().equals("")) {
-				tfMsg.setText("ID를 입력하세요.");
+				JOptionPane.showMessageDialog(null, "ID를 입력하세요.");
 			} else if (pwd.getText().equals("")) {
-				tfMsg.setText("Password를 입력하세요");
+				JOptionPane.showMessageDialog(null, "비밀번호를 입력하세요");
 			} else {
 				System.out.println(id.getText());
 				System.out.println(pwd.getText());
@@ -75,9 +91,9 @@ public class Login extends WindowAdapter implements ActionListener {
 				ManagerVo vo = new ManagerVo(id.getText(), pwd.getText());
 				
 				if(managerService.login(vo) == true) {
-					tfMsg.setText("로그인 성공");
+					System.out.println("로그인 성공");
 				} else {
-					tfMsg.setText("아이디/비밀번호가 일치하지 않습니다.");
+					JOptionPane.showMessageDialog(null, "아이디 또는 비밀번호가 일치하지 않습니다.");
 				}
 				
 				
@@ -94,5 +110,4 @@ public class Login extends WindowAdapter implements ActionListener {
 		Login t = new Login();
 		t.start();
 	}
-
 }

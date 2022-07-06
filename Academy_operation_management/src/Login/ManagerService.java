@@ -1,4 +1,4 @@
-package awt;
+package Login;
 
 import java.util.List;
 
@@ -8,14 +8,18 @@ public class ManagerService {
 	public ManagerService(ManagerDao managerDao) {
 		this.managerDao = managerDao;
 	}
+	
+	public boolean check(ManagerVo vo) {
+		if(managerDao.check(vo) == false) {
+			return false;
+		}
+		return true;
+	}
 
 	// 등록하기
 	public boolean regist(ManagerVo vo) {
-		if (managerDao.selectMember(vo.getNum()) == null) {
-			managerDao.insertMember(vo);
-			return true;
-		}
-		return false;
+		managerDao.insertMember(vo);
+		return true;
 	}
 
 	// 로그인
