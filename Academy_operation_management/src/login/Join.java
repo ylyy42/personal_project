@@ -1,10 +1,9 @@
-package Login;
+package login;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -14,6 +13,10 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import database.manager.ManagerDao;
+import database.manager.ManagerService;
+import database.manager.ManagerVo;
 
 public class Join extends JFrame {
 
@@ -32,16 +35,6 @@ public class Join extends JFrame {
 	private boolean idCheck = false;
 
 	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					Join frame = new Join();
-//					
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
 		Join frame = new Join();
 	}
 

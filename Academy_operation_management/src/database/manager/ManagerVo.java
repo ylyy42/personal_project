@@ -1,4 +1,4 @@
-package Login;
+package database.manager;
 
 public class ManagerVo {
 	private int num;

@@ -1,20 +1,22 @@
-package Login;
+package login;
 
-import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Label;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
-import java.awt.Font;
+import database.manager.ManagerDao;
+import database.manager.ManagerService;
+import database.manager.ManagerVo;
+import main.Main;
 
 public class Login extends WindowAdapter implements ActionListener {
 
@@ -91,7 +93,8 @@ public class Login extends WindowAdapter implements ActionListener {
 				ManagerVo vo = new ManagerVo(id.getText(), pwd.getText());
 				
 				if(managerService.login(vo) == true) {
-					System.out.println("로그인 성공");
+					f.dispose();
+					new Main();
 				} else {
 					JOptionPane.showMessageDialog(null, "아이디 또는 비밀번호가 일치하지 않습니다.");
 				}
@@ -101,7 +104,7 @@ public class Login extends WindowAdapter implements ActionListener {
 		}
 
 		if (e.getActionCommand().equals("회원가입")) {
-			Join frame = new Join();
+			new Join();
 		}
 
 	}
