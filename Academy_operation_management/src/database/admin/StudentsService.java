@@ -1,5 +1,7 @@
 package database.admin;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -24,4 +26,20 @@ public class StudentsService {
 	public String[][] listLec(String name) {
 		return studentsdao.selectMemberLec(name);
 	}
+	
+	// 학생 출석 정보
+	public String[][] listAtt(String name) {
+		return studentsdao.selectMemberAtt(name);
+	}
+	
+	// 학생 성적 정보
+	public String[][] listSco(String name) {
+		return studentsdao.selectMemberScore(name);
+	}
+	
+	// 사진 저장
+	public void pictureIn(String pname, String name) throws FileNotFoundException {
+		studentsdao.savePicture(pname, name);
+	}
+	
 }
