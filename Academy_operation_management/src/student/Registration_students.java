@@ -12,12 +12,14 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import database.admin.StudentsDao;
 import database.admin.StudentsService;
+import database.admin.StudentsVo;
 
 public class Registration_students extends JFrame {
 
@@ -51,7 +53,7 @@ public class Registration_students extends JFrame {
 		panel.add(lblNewLabel_1);
 
 		JLabel lblNewLabel_1_1 = new JLabel("\uC8FC\uBBFC\uB4F1\uB85D\uBC88\uD638");
-		lblNewLabel_1_1.setBounds(473, 62, 72, 15);
+		lblNewLabel_1_1.setBounds(473, 62, 85, 15);
 		panel.add(lblNewLabel_1_1);
 
 		JLabel lblNewLabel_1_1_1 = new JLabel("\uD734\uB300\uD3F0\uBC88\uD638");
@@ -78,12 +80,8 @@ public class Registration_students extends JFrame {
 		lblNewLabel_1_1_1_5.setBounds(473, 239, 85, 15);
 		panel.add(lblNewLabel_1_1_1_5);
 
-		JLabel lblNewLabel_1_1_1_6 = new JLabel("\uC774\uBA54\uC77C");
-		lblNewLabel_1_1_1_6.setBounds(473, 268, 57, 15);
-		panel.add(lblNewLabel_1_1_1_6);
-
 		JLabel lblNewLabel_1_1_1_7 = new JLabel("\uC8FC\uC18C");
-		lblNewLabel_1_1_1_7.setBounds(473, 298, 57, 15);
+		lblNewLabel_1_1_1_7.setBounds(473, 268, 57, 15);
 		panel.add(lblNewLabel_1_1_1_7);
 
 		TextField textField = new TextField();
@@ -118,17 +116,20 @@ public class Registration_students extends JFrame {
 		textField_1_1_1_4.setBounds(575, 232, 171, 23);
 		panel.add(textField_1_1_1_4);
 
-		TextField textField_1_1_1_5 = new TextField();
-		textField_1_1_1_5.setBounds(575, 264, 171, 23);
-		panel.add(textField_1_1_1_5);
-
 		TextField textField_1_1_1_6 = new TextField();
-		textField_1_1_1_6.setBounds(575, 294, 307, 23);
+		textField_1_1_1_6.setBounds(575, 264, 307, 23);
 		panel.add(textField_1_1_1_6);
 
 		Button button_1 = new Button("\uB4F1\uB85D\uD558\uAE30");
 		button_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				StudentsVo vo = new StudentsVo(1, textField.getText(), textField_1.getText(), textField_1_1.getText(), textField_1_1_1.getText(), textField_1_1_1_1.getText(),
+						textField_1_1_1_2.getText(), textField_1_1_1_3.getText(), textField_1_1_1_4.getText(), textField_1_1_1_6.getText());
+				
+				if(studentsService.regist(vo) == 1) {
+					new Admin_students();
+					dispose();
+				}
 			}
 		});
 		button_1.setBounds(771, 363, 105, 34);
@@ -144,6 +145,12 @@ public class Registration_students extends JFrame {
 		contentPanel.add(lblNewLabel);
 
 		Button button_1_1 = new Button("\uCDE8\uC18C");
+		button_1_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Admin_students();
+				dispose();
+			}
+		});
 		button_1_1.setBounds(830, 16, 105, 34);
 		contentPanel.add(button_1_1);
 

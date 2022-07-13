@@ -9,11 +9,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.SQLException;
 import java.util.List;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -30,8 +31,6 @@ import main.Main;
 
 public class Admin_students extends JFrame implements MouseListener {
 
-	private StudentsVo studentsVo;
-	private StudentsDao studentsDao;
 	private StudentsService studentsService;
 
 	private Container con;
@@ -44,14 +43,13 @@ public class Admin_students extends JFrame implements MouseListener {
 	private JTextField textField_6;
 	private JTextField textField_7;
 	private JTextField textField_8;
-	private JTextField textField_9;
 	private JTextField textField_10;
 	private JPanel panel;
 	private JTable jtable;
 	private JTabbedPane pane;
 	private String[] tHeader;
 	private String[][] tConts;
-	private String name;
+	static String code;
 	private List<StudentsVo> stuInfo;
 	private String[][] stuLecInfo;
 	private String[][] stuAttInfo;
@@ -62,7 +60,7 @@ public class Admin_students extends JFrame implements MouseListener {
 	private JTable jtable1;
 	private JTable jtable2;
 	private JTable jtable3;
-	private String[] oneH = { "강좌명", "수강신청일", "수강료청구일", "수납여부", "수강상태" };
+	private String[] oneH = { "강좌명","담당 선생님", "수강료청구일", "수납여부", "수강상태" };
 	private String[] twoH = { "입실", "퇴실", "조퇴", "조퇴사유" };
 	private String[] threeH = { "시험날짜", "시험이름", "점수" };
 	private JScrollPane jscp1;
@@ -98,7 +96,7 @@ public class Admin_students extends JFrame implements MouseListener {
 		button.setBounds(224, 8, 39, 20);
 		contentPanel.add(button);
 
-		tHeader = new String[] { "이름", "학교", "학년" };
+		tHeader = new String[] {"코드", "이름", "학교", "학년" };
 		tConts = studentsService.listAll();
 
 		jtable = new JTable(tConts, tHeader);
@@ -153,10 +151,6 @@ public class Admin_students extends JFrame implements MouseListener {
 		JLabel lblNewLabel_2_1_1_5 = new JLabel("\uD559\uBD80\uBAA8\uC5F0\uB77D\uCC98");
 		lblNewLabel_2_1_1_5.setBounds(342, 220, 82, 15);
 		contentPanel_1.add(lblNewLabel_2_1_1_5);
-
-		JLabel lblNewLabel_2_1_1_6 = new JLabel("\uC774\uBA54\uC77C");
-		lblNewLabel_2_1_1_6.setBounds(342, 248, 57, 15);
-		contentPanel_1.add(lblNewLabel_2_1_1_6);
 
 		JLabel lblNewLabel_2_1_1_7 = new JLabel("\uC8FC\uC18C");
 		lblNewLabel_2_1_1_7.setBounds(239, 278, 57, 15);
@@ -217,13 +211,6 @@ public class Admin_students extends JFrame implements MouseListener {
 		textField_8.setBounds(450, 217, 171, 21);
 		contentPanel_1.add(textField_8);
 
-		textField_9 = new JTextField();
-		textField_9.setEditable(false);
-		lblNewLabel_2_1_1_6.setLabelFor(textField_9);
-		textField_9.setColumns(10);
-		textField_9.setBounds(450, 245, 171, 21);
-		contentPanel_1.add(textField_9);
-
 		textField_10 = new JTextField();
 		textField_10.setEditable(false);
 		lblNewLabel_2_1_1_7.setLabelFor(textField_10);
@@ -240,6 +227,21 @@ public class Admin_students extends JFrame implements MouseListener {
 		contentPanel_1.add(pane);
 
 		Button button_1 = new Button("\uAC1C\uC778\uC815\uBCF4\uC218\uC815");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(code != null) {
+					try {
+						new Modify_students();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					dispose();
+				} else {
+					JOptionPane.showMessageDialog(null, "학생을 선택해주세요.");
+				}
+			}
+		});
 		button_1.setBounds(35, 246, 106, 23);
 		contentPanel_1.add(button_1);
 
@@ -248,6 +250,12 @@ public class Admin_students extends JFrame implements MouseListener {
 		contentPanel_1.add(button_1_1);
 
 		Button button_2 = new Button("\uC2E0\uADDC\uB4F1\uB85D");
+		button_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Registration_students();
+				dispose();
+			}
+		});
 		button_2.setBounds(946, 52, 76, 23);
 		getContentPane().add(button_2);
 
@@ -301,6 +309,12 @@ public class Admin_students extends JFrame implements MouseListener {
 		pane.addTab("강좌", pannel1);
 
 		Button button_3 = new Button("\uAC15\uC88C\uB4F1\uB85D");
+		button_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Lecture_registration();
+				dispose();
+			}
+		});
 		button_3.setBounds(533, 129, 87, 23);
 		pannel1.add(button_3);
 
@@ -325,17 +339,17 @@ public class Admin_students extends JFrame implements MouseListener {
 		jtable.addMouseListener(this);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException {
 		Admin_students frame = new Admin_students();
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		int row = jtable.getSelectedRow();
-		name = (String) jtable.getModel().getValueAt(row, 0);
-		stuInfo = studentsService.infor(name);
-		System.out.println(studentsService.infor(name));
-
+		code = (String) jtable.getModel().getValueAt(row, 0);
+		stuInfo = studentsService.infor(code);
+		System.out.println(studentsService.infor(code));
+		
 		textField_1.setText(stuInfo.get(0).getName());
 		textField_2.setText(stuInfo.get(0).getResidentId());
 		textField_3.setText(stuInfo.get(0).getPhone());
@@ -344,32 +358,31 @@ public class Admin_students extends JFrame implements MouseListener {
 		textField_6.setText(stuInfo.get(0).getGrade());
 		textField_7.setText(stuInfo.get(0).getParentsName());
 		textField_8.setText(stuInfo.get(0).getParentsPhone());
-		textField_9.setText(stuInfo.get(0).getEmail());
 		textField_10.setText(stuInfo.get(0).getAddress());
 
-		stuLecInfo = studentsService.listLec(name);
+		stuLecInfo = studentsService.listLec(code);
 		jtable1 = new JTable(stuLecInfo, oneH);
 		jscp1 = new JScrollPane(jtable1);
 		jscp1.setBorder(null);
 		jscp1.setBounds(0, 0, 630, 117);
 		pannel1.add(jscp1);
 
-		stuAttInfo = studentsService.listAtt(name);
+		stuAttInfo = studentsService.listAtt(code);
 		jtable2 = new JTable(stuAttInfo, twoH);
 		jscp2 = new JScrollPane(jtable2);
 		jscp2.setBorder(null);
 		jscp2.setBounds(0, 0, 630, 117);
 		pannel2.add(jscp2);
 
-		stuScoInfo = studentsService.listSco(name);
-		jtable3 = new JTable(stuScoInfo, twoH);
+		stuScoInfo = studentsService.listSco(code);
+		jtable3 = new JTable(stuScoInfo, threeH);
 		jscp3 = new JScrollPane(jtable3);
 		jscp3.setBorder(null);
 		jscp3.setBounds(0, 0, 630, 117);
 		pannel3.add(jscp3);
 
 	}
-
+	
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
@@ -393,4 +406,5 @@ public class Admin_students extends JFrame implements MouseListener {
 		// TODO Auto-generated method stub
 
 	}
+	
 }

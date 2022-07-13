@@ -33,8 +33,8 @@ public class StudentsVo {
 		this.address = address;
 	}
 
-	public int getCode() {
-		return code;
+	public String getCode() {
+		return String.valueOf(code);
 	}
 
 	public String getName() {
