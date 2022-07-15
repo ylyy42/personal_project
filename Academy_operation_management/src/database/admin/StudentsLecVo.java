@@ -12,14 +12,13 @@ public class StudentsLecVo {
 	private String sCode;
 	private String lCode;
 	
-	StudentsLecVo(String lCode, String lecName, String lectureFee, String tName, String quota, String giveDate ,String members) {
+	StudentsLecVo(String lCode, String lecName, String lectureFee, String tName, String quota ,String members) {
 		this.lCode = lCode;
 		this.lecName = lecName;
 		this.lectureFee = lectureFee;
 		this.tName = tName;
 		this.quota = quota;
 		this.members = members;
-		this.giveDate = giveDate;
 	}
 	
 	public StudentsLecVo(String sCode, String lCode, String giveDate, String giving, String ing, int num) {
@@ -30,11 +29,11 @@ public class StudentsLecVo {
 		this.ing = ing;
 	}
 	
-	StudentsLecVo(String lecName, String giveDate, String giving, String ing, String tName) {
+	StudentsLecVo(String lCode, String lecName, String giveDate, String giving, String tName) {
 		this.lecName = lecName;
 		this.giveDate = giveDate;
 		this.giving = giving;
-		this.ing = ing;
+		this.lCode = lCode;
 		this.tName = tName;
 	}
 	

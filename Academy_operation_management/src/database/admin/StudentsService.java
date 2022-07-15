@@ -12,6 +12,15 @@ public class StudentsService {
 		this.studentsdao = studentsdao;
 	}
 	
+	public int updateFee(StudentsFeeVo vo) {
+		return studentsdao.updateFee(vo);
+	}
+	
+	// 수납 관리 목록
+	public String[][] Feelist() {
+		return studentsdao.selectFee();
+	}
+	
 	// 학생등록
 	public int regist(StudentsVo vo) {
 		return studentsdao.insertMember(vo);
@@ -52,6 +61,11 @@ public class StudentsService {
 		return studentsdao.insertLec(vo);
 	}
 	
+	// 학생 강좌 삭제
+	public int stuLecDelete(int sCode, int lCode) {
+		return studentsdao.deleteLec(sCode, lCode);
+	}
+	
 	// 학생 출석 정보
 	public String[][] listAtt(String code) {
 		return studentsdao.selectMemberAtt(code);
@@ -62,9 +76,19 @@ public class StudentsService {
 		return studentsdao.selectMemberScore(code);
 	}
 	
-	// 사진 저장
-	public void pictureIn(String pname, String code) throws FileNotFoundException {
-		studentsdao.savePicture(pname, code);
+	// 학생 출석
+	public int Checkin(StudentsAttVo vo) {
+		return studentsdao.StuIncheck(vo);
+	}
+	
+	// 학생 퇴실
+	public int Checkout(StudentsAttVo vo) {
+		return studentsdao.StuOutcheck(vo);
+	}
+	
+	// 학생 점수 저장
+	public int insertScore(StudentsScoVo vo) {
+		return studentsdao.StuScoreIn(vo);
 	}
 	
 }

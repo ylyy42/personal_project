@@ -24,6 +24,7 @@ public class Lecture_registration extends JFrame {
 	private StudentsService studentsService;
 	private String code = Admin_students.code;
 	private String l_Code;
+	private String[] oneH = { "강좌번호","강좌명","담당 선생님", "수강료청구일", "수납여부" };
 	
 	public int RealCode(String code) {
 		int realCode = Integer.parseInt(code);
@@ -59,8 +60,10 @@ public class Lecture_registration extends JFrame {
 				
 				if(studentsService.stuLecAdd(vo) == 1) {
 					JOptionPane.showMessageDialog(null, "강좌 등록이 완료되었습니다.");
+					Admin_students.model1.setRowCount(0);
+					String[][] stuLecInfo = studentsService.listLec(code);
+					Admin_students.model1.setDataVector(stuLecInfo, oneH);
 					dispose();
-					new Admin_students();
 				}
 			}
 		});

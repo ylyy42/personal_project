@@ -6,6 +6,7 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -29,10 +30,13 @@ public class Modify_students extends JFrame {
 	private JTextField textField_6;
 	private JTextField textField_7;
 	private JTextField textField_8;
+	private List<StudentsVo> stuInfo;
 	private int realCode;
+	private String[] tHeader = new String[] {"코드", "이름", "학교", "학년" };
+	private String[][] tConts;
 	
 	public int RealCode(String code) {
-		int realCode = Integer.parseInt(code);
+		realCode = Integer.parseInt(code);
 		return realCode;
 	}
 	
@@ -138,9 +142,25 @@ public class Modify_students extends JFrame {
 						textField_7.getText(), textField_8.getText());
 				int realCode = RealCode(code);
 				if(studentsService.updatestu(vo, realCode) == 1) {
+					Admin_students.model.setRowCount(0);
+					tConts = studentsService.listAll();
+					Admin_students.model.setDataVector(tConts, tHeader);
+					
+					stuInfo = studentsService.infor(code);
+					
+					Admin_students.textField_1.setText(stuInfo.get(0).getName());
+					Admin_students.textField_2.setText(stuInfo.get(0).getResidentId());
+					Admin_students.textField_3.setText(stuInfo.get(0).getPhone());
+					Admin_students.textField_4.setText(stuInfo.get(0).getEmail());
+					Admin_students.textField_5.setText(stuInfo.get(0).getSchool());
+					Admin_students.textField_6.setText(stuInfo.get(0).getGrade());
+					Admin_students.textField_7.setText(stuInfo.get(0).getParentsName());
+					Admin_students.textField_8.setText(stuInfo.get(0).getParentsPhone());
+					Admin_students.textField_10.setText(stuInfo.get(0).getAddress());
+					
+					
 					JOptionPane.showMessageDialog(null, "정보 수정이 완료되었습니다.");
 					dispose();
-					new Admin_students();
 				}
 			}
 		});

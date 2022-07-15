@@ -25,13 +25,15 @@ public class Registration_students extends JFrame {
 
 	private JPanel contentPanel;
 	private StudentsService studentsService;
+	private String[] tHeader = new String[] {"코드", "이름", "학교", "학년" };
+	private String[][] tConts;
 
 	public Registration_students() {
 		studentsService = new StudentsService(new StudentsDao());
 
 		setBounds(new Rectangle(0, 0, 1000, 0));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(1000, 560);
+		setSize(669, 560);
 		setLocationRelativeTo(null);
 		contentPanel = new JPanel();
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -40,84 +42,80 @@ public class Registration_students extends JFrame {
 
 		JPanel panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel.setBounds(40, 56, 895, 415);
+		panel.setBounds(40, 56, 565, 415);
 		contentPanel.add(panel);
 		panel.setLayout(null);
 
-		Panel panel_1 = new Panel();
-		panel_1.setBounds(98, 37, 250, 210);
-		panel.add(panel_1);
-
 		JLabel lblNewLabel_1 = new JLabel("\uC774\uB984");
-		lblNewLabel_1.setBounds(473, 33, 57, 15);
+		lblNewLabel_1.setBounds(87, 59, 57, 15);
 		panel.add(lblNewLabel_1);
 
 		JLabel lblNewLabel_1_1 = new JLabel("\uC8FC\uBBFC\uB4F1\uB85D\uBC88\uD638");
-		lblNewLabel_1_1.setBounds(473, 62, 85, 15);
+		lblNewLabel_1_1.setBounds(87, 88, 85, 15);
 		panel.add(lblNewLabel_1_1);
 
 		JLabel lblNewLabel_1_1_1 = new JLabel("\uD734\uB300\uD3F0\uBC88\uD638");
-		lblNewLabel_1_1_1.setBounds(473, 88, 72, 15);
+		lblNewLabel_1_1_1.setBounds(87, 114, 72, 15);
 		panel.add(lblNewLabel_1_1_1);
 
 		JLabel lblNewLabel_1_1_1_1 = new JLabel("\uC774\uBA54\uC77C");
-		lblNewLabel_1_1_1_1.setBounds(473, 117, 57, 15);
+		lblNewLabel_1_1_1_1.setBounds(87, 143, 57, 15);
 		panel.add(lblNewLabel_1_1_1_1);
 
 		JLabel lblNewLabel_1_1_1_2 = new JLabel("\uD559\uAD50");
-		lblNewLabel_1_1_1_2.setBounds(473, 145, 57, 15);
+		lblNewLabel_1_1_1_2.setBounds(87, 171, 57, 15);
 		panel.add(lblNewLabel_1_1_1_2);
 
 		JLabel lblNewLabel_1_1_1_3 = new JLabel("\uD559\uB144");
-		lblNewLabel_1_1_1_3.setBounds(473, 175, 57, 15);
+		lblNewLabel_1_1_1_3.setBounds(87, 201, 57, 15);
 		panel.add(lblNewLabel_1_1_1_3);
 
 		JLabel lblNewLabel_1_1_1_4 = new JLabel("\uD559\uBD80\uBAA8\uC774\uB984");
-		lblNewLabel_1_1_1_4.setBounds(473, 207, 72, 15);
+		lblNewLabel_1_1_1_4.setBounds(87, 233, 72, 15);
 		panel.add(lblNewLabel_1_1_1_4);
 
 		JLabel lblNewLabel_1_1_1_5 = new JLabel("\uD559\uBD80\uBAA8\uC5F0\uB77D\uCC98");
-		lblNewLabel_1_1_1_5.setBounds(473, 239, 85, 15);
+		lblNewLabel_1_1_1_5.setBounds(87, 265, 85, 15);
 		panel.add(lblNewLabel_1_1_1_5);
 
 		JLabel lblNewLabel_1_1_1_7 = new JLabel("\uC8FC\uC18C");
-		lblNewLabel_1_1_1_7.setBounds(473, 268, 57, 15);
+		lblNewLabel_1_1_1_7.setBounds(87, 294, 57, 15);
 		panel.add(lblNewLabel_1_1_1_7);
 
 		TextField textField = new TextField();
-		textField.setBounds(575, 29, 171, 23);
+		textField.setBounds(189, 55, 171, 23);
 		panel.add(textField);
 
 		TextField textField_1 = new TextField();
-		textField_1.setBounds(575, 56, 171, 23);
+		textField_1.setBounds(189, 82, 171, 23);
 		panel.add(textField_1);
 
 		TextField textField_1_1 = new TextField();
-		textField_1_1.setBounds(575, 84, 171, 23);
+		textField_1_1.setBounds(189, 110, 171, 23);
 		panel.add(textField_1_1);
 
 		TextField textField_1_1_1 = new TextField();
-		textField_1_1_1.setBounds(575, 113, 171, 23);
+		textField_1_1_1.setBounds(189, 139, 171, 23);
 		panel.add(textField_1_1_1);
 
 		TextField textField_1_1_1_1 = new TextField();
-		textField_1_1_1_1.setBounds(575, 141, 171, 23);
+		textField_1_1_1_1.setBounds(189, 167, 171, 23);
 		panel.add(textField_1_1_1_1);
 
 		TextField textField_1_1_1_2 = new TextField();
-		textField_1_1_1_2.setBounds(575, 171, 171, 23);
+		textField_1_1_1_2.setBounds(189, 197, 171, 23);
 		panel.add(textField_1_1_1_2);
 
 		TextField textField_1_1_1_3 = new TextField();
-		textField_1_1_1_3.setBounds(575, 201, 171, 23);
+		textField_1_1_1_3.setBounds(189, 227, 171, 23);
 		panel.add(textField_1_1_1_3);
 
 		TextField textField_1_1_1_4 = new TextField();
-		textField_1_1_1_4.setBounds(575, 232, 171, 23);
+		textField_1_1_1_4.setBounds(189, 258, 171, 23);
 		panel.add(textField_1_1_1_4);
 
 		TextField textField_1_1_1_6 = new TextField();
-		textField_1_1_1_6.setBounds(575, 264, 307, 23);
+		textField_1_1_1_6.setBounds(189, 290, 307, 23);
 		panel.add(textField_1_1_1_6);
 
 		Button button_1 = new Button("\uB4F1\uB85D\uD558\uAE30");
@@ -127,17 +125,15 @@ public class Registration_students extends JFrame {
 						textField_1_1_1_2.getText(), textField_1_1_1_3.getText(), textField_1_1_1_4.getText(), textField_1_1_1_6.getText());
 				
 				if(studentsService.regist(vo) == 1) {
-					new Admin_students();
+					Admin_students.model.setRowCount(0);
+					tConts = studentsService.listAll();
+					Admin_students.model.setDataVector(tConts, tHeader);
 					dispose();
 				}
 			}
 		});
-		button_1.setBounds(771, 363, 105, 34);
+		button_1.setBounds(403, 356, 105, 34);
 		panel.add(button_1);
-
-		Label label = new Label("\uB4F1\uB85D\uD6C4 \uC0AC\uC9C4\uC744 \uC124\uC815\uD574\uC8FC\uC138\uC694");
-		label.setBounds(149, 283, 190, 23);
-		panel.add(label);
 
 		JLabel lblNewLabel = new JLabel("\uD559\uC0DD\uC2E0\uADDC\uB4F1\uB85D");
 		lblNewLabel.setFont(new Font("맑은 고딕", Font.BOLD, 15));
@@ -151,7 +147,7 @@ public class Registration_students extends JFrame {
 				dispose();
 			}
 		});
-		button_1_1.setBounds(830, 16, 105, 34);
+		button_1_1.setBounds(498, 16, 105, 34);
 		contentPanel.add(button_1_1);
 
 		setVisible(true);

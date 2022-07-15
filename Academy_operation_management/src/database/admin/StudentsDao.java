@@ -1,8 +1,5 @@
 package database.admin;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -108,6 +105,42 @@ public class StudentsDao {
 		return result;
 	}
 
+	// 학생 강좌삭제하기
+	public int deleteLec(int sCode, int lCode) {
+		PreparedStatement pstmt = null; // 쿼리문사용을위한
+		int result = 0; // insert할땐 반환값이 숫자 , 오라클에서 보면 삽입하면 '1행의 어쩌구 하고 앞에 1이 나옴'
+		try {
+
+			System.out.println("접속성공");
+
+			StringBuffer query = new StringBuffer();
+			query.append("DELETE FROM STUDENT_LECTUREINFO ");
+			query.append("WHERE S_CODE = ? AND L_CODE = ?");
+
+			pstmt = conn.prepareStatement(query.toString());
+			pstmt.setInt(1, sCode);
+			pstmt.setInt(2, lCode);
+
+			System.out.println(query);
+
+			result = pstmt.executeUpdate(); // insert할때는 처음에 반환값이 숫자이기때문에 esecuteQuery함수를 쓸수가없다
+			System.out.println(result + "행이 삽입되었습니다.");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return result;
+	}
+
 	// 학생 정보 수정하기
 	public int updateMember(StudentsVo vo, int code) {
 		PreparedStatement pstmt = null; // 쿼리문사용을위한
@@ -135,6 +168,40 @@ public class StudentsDao {
 			pstmt.setString(8, vo.getParentsPhone());
 			pstmt.setString(9, vo.getAddress());
 			pstmt.setInt(10, code);
+			result = pstmt.executeUpdate(); // insert할때는 처음에 반환값이 숫자이기때문에 esecuteQuery함수를 쓸수가없다
+			System.out.println(result + "행이 수정되었습니다.");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return result;
+	}
+	
+	// 학생 정보 수정하기
+	public int updateFee(StudentsFeeVo vo) {
+		PreparedStatement pstmt = null; // 쿼리문사용을위한
+		int result = 0; // insert할땐 반환값이 숫자 , 오라클에서 보면 삽입하면 '1행의 어쩌구 하고 앞에 1이 나옴'
+		try {
+
+			System.out.println("접속성공");
+
+			StringBuffer query = new StringBuffer();
+			query.append("UPDATE STUDENT_LECTUREINFO SET giving = '수납완료' WHERE s_code = ?");
+
+			System.out.println(query);
+
+			pstmt = conn.prepareStatement(query.toString());
+			pstmt.setString(1, vo.getsCode());
 			result = pstmt.executeUpdate(); // insert할때는 처음에 반환값이 숫자이기때문에 esecuteQuery함수를 쓸수가없다
 			System.out.println(result + "행이 수정되었습니다.");
 
@@ -315,9 +382,9 @@ public class StudentsDao {
 		try {
 
 			System.out.println("접속성공");
-			pstmt = conn.prepareStatement("SELECT l.NAME , sl.GIVE_DATE , sl.GIVING , sl.ing,t.NAME \r\n"
+			pstmt = conn.prepareStatement("SELECT l.code, l.NAME , sl.GIVE_DATE , sl.GIVING,t.NAME\r\n"
 					+ "FROM STUDENTS s , LECTURE l , STUDENT_LECTUREINFO sl, TEACHER t \r\n" + "WHERE s.CODE = " + code
-					+ "\r\n" + "AND s.CODE = sl.S_CODE AND l.CODE = sl.L_CODE AND l.TEACHER_CODE = t.CODE  ");
+					+ "\r\n" + "AND s.CODE = sl.S_CODE AND l.CODE = sl.L_CODE AND l.TEACHER_CODE = t.CODE ORDER BY l.code ");
 			rs = pstmt.executeQuery();
 
 			// 값을가져오는부분
@@ -332,11 +399,11 @@ public class StudentsDao {
 
 			for (int i = 0; i < result.size(); i++) {
 				for (int j = 0; j < 5; j++) {
-					lecConts[i][j] = result.get(i).getLecName();
+					lecConts[i][j] = result.get(i).getlCode();
+					lecConts[i][++j] = result.get(i).getLecName();
 					lecConts[i][++j] = result.get(i).getTname();
 					lecConts[i][++j] = result.get(i).getGiveDate();
 					lecConts[i][++j] = result.get(i).getGiving();
-					lecConts[i][++j] = result.get(i).getIng();
 				}
 			}
 
@@ -375,17 +442,16 @@ public class StudentsDao {
 
 			System.out.println("접속성공");
 			pstmt = conn.prepareStatement(
-					"SELECT l.CODE,l.NAME, l.LECTURE_FEE, t.Name, l.QUOTA, sl.GIVE_DATE, count(sl.S_CODE) AS 학생수 \r\n"
+					"SELECT l.CODE,l.NAME, l.LECTURE_FEE, t.Name, l.QUOTA, count(sl.S_CODE) AS 학생수 \r\n"
 							+ "FROM LECTURE l, TEACHER t, STUDENT_LECTUREINFO sl, STUDENTS s  \r\n"
 							+ "WHERE l.TEACHER_CODE = t.CODE AND sl.L_CODE(+) = l.CODE AND sl.S_CODE = s.CODE(+)\r\n"
-							+ "GROUP BY l.CODE, l.name, l.LECTURE_FEE , t.NAME , l.QUOTA , sl.GIVE_DATE \r\n"
-							+ "ORDER BY l.NAME ");
+							+ "GROUP BY l.CODE, l.name, l.LECTURE_FEE , t.NAME , l.QUOTA \r\n" + "ORDER BY l.NAME ");
 			rs = pstmt.executeQuery();
 
 			// 값을가져오는부분
 			while (rs.next()) {
 				StudentsLecVo vo = new StudentsLecVo(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
-						rs.getString(5), rs.getString(6), rs.getString(7));
+						rs.getString(5), rs.getString(6));
 
 				result.add(vo);
 			}
@@ -428,6 +494,114 @@ public class StudentsDao {
 
 		return lecConts;
 	}
+	
+	// 학생 성적 저장
+		public int StuScoreIn (StudentsScoVo vo) {
+			PreparedStatement pstmt = null; // 쿼리문사용을위한
+			int result = 0; // insert할땐 반환값이 숫자 , 오라클에서 보면 삽입하면 '1행의 어쩌구 하고 앞에 1이 나옴'
+			try {
+
+				System.out.println("접속성공");
+
+				StringBuffer query = new StringBuffer();
+				query.append("INSERT INTO score (edate, ename, escore, scode)");
+				query.append(" VALUES (?,?,?,?)");
+
+				System.out.println(query);
+
+				pstmt = conn.prepareStatement(query.toString());
+				pstmt.setString(1, vo.getEdate());
+				pstmt.setString(2, vo.getEname());
+				pstmt.setString(3, vo.getEscore());
+				pstmt.setString(4, vo.getScode());
+
+				result = pstmt.executeUpdate(); // insert할때는 처음에 반환값이 숫자이기때문에 esecuteQuery함수를 쓸수가없다
+				System.out.println(result + "행이 삽입되었습니다.");
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+			return result;
+		}
+
+	// 학생 출석하기
+	public int StuIncheck(StudentsAttVo vo) {
+		PreparedStatement pstmt = null; // 쿼리문사용을위한
+		int result = 0; // insert할땐 반환값이 숫자 , 오라클에서 보면 삽입하면 '1행의 어쩌구 하고 앞에 1이 나옴'
+		try {
+
+			System.out.println("접속성공");
+
+			StringBuffer query = new StringBuffer();
+			query.append("INSERT INTO ATTENDANCE_STUDENT (student_code, intime)");
+			query.append(" VALUES (?, sysdate)");
+
+			System.out.println(query);
+
+			pstmt = conn.prepareStatement(query.toString());
+			pstmt.setString(1, vo.getsCode());
+
+			result = pstmt.executeUpdate(); // insert할때는 처음에 반환값이 숫자이기때문에 esecuteQuery함수를 쓸수가없다
+			System.out.println(result + "행이 삽입되었습니다.");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return result;
+	}
+
+	// 학생 퇴실하기
+	public int StuOutcheck(StudentsAttVo vo) {
+		PreparedStatement pstmt = null; // 쿼리문사용을위한
+		int result = 0; // insert할땐 반환값이 숫자 , 오라클에서 보면 삽입하면 '1행의 어쩌구 하고 앞에 1이 나옴'
+		try {
+
+			System.out.println("접속성공");
+
+			StringBuffer query = new StringBuffer();
+			query.append("update ATTENDANCE_STUDENT  SET outtime = sysdate");
+			query.append(" WHERE STUDENT_CODE = ? AND OUTTIME IS NULL");
+
+			System.out.println(query);
+
+			pstmt = conn.prepareStatement(query.toString());
+			pstmt.setString(1, vo.getsCode());
+
+			result = pstmt.executeUpdate(); // insert할때는 처음에 반환값이 숫자이기때문에 esecuteQuery함수를 쓸수가없다
+			System.out.println(result + "행이 삽입되었습니다.");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return result;
+	}
 
 	// 학생 출석 정보
 	public String[][] selectMemberAtt(String code) {
@@ -439,27 +613,24 @@ public class StudentsDao {
 		try {
 
 			System.out.println("접속성공");
-			pstmt = conn.prepareStatement("SELECT as2.INTIME, as2.OUTTIME, as2.early, as2.earlyWhy \r\n"
+			pstmt = conn.prepareStatement("SELECT as2.INTIME, as2.OUTTIME \r\n"
 					+ "FROM STUDENTS s , ATTENDANCE_STUDENT as2 \r\n" + "WHERE s.CODE = " + code
 					+ " AND s.CODE = as2.STUDENT_CODE ");
 			rs = pstmt.executeQuery();
 
 			// 값을가져오는부분
 			while (rs.next()) {
-				StudentsAttVo vo = new StudentsAttVo(rs.getString(1), rs.getString(2), rs.getString(3),
-						rs.getString(4));
+				StudentsAttVo vo = new StudentsAttVo(rs.getString(1), rs.getString(2));
 
 				result.add(vo);
 			}
 
-			AttConts = new String[result.size()][5];
+			AttConts = new String[result.size()][2];
 
 			for (int i = 0; i < result.size(); i++) {
-				for (int j = 0; j < 4; j++) {
+				for (int j = 0; j < 2; j++) {
 					AttConts[i][j] = result.get(i).getInTime();
 					AttConts[i][++j] = result.get(i).getOutTime();
-					AttConts[i][++j] = result.get(i).getEarly();
-					AttConts[i][++j] = result.get(i).getEarlyWhy();
 				}
 			}
 
@@ -541,102 +712,65 @@ public class StudentsDao {
 
 		return ScoConts;
 	}
+	
+	// 학생 강좌 정보
+		public String[][] selectFee() {
+			PreparedStatement pstmt = null; // 쿼리문사용을위한
+			ResultSet rs = null; // 셀렉트문의 결과는 Resultset으로 옴
+			List<StudentsFeeVo> result = new ArrayList<>();
+			String[][] conts = null;
 
-	// 이미지 저장하기
-	public void savePicture(String pname, String name) throws FileNotFoundException {
-		PreparedStatement pstmt = null; // 쿼리문사용을위한
-		try {
-			System.out.println("접속성공");
+			try {
 
-			File f = new File("./images/" + pname + ".jpg");
-			FileInputStream fis = new FileInputStream(f);
-			pstmt = conn.prepareStatement("UPDATE students SET SPICTURE = ? WHERE name = ?");
-			pstmt.setBinaryStream(1, fis, (int) f.length());
-			pstmt.setString(2, name);
+				System.out.println("접속성공");
+				pstmt = conn.prepareStatement("SELECT s.CODE  ,s.NAME , sl.GIVE_DATE , l.LECTURE_FEE , sl.GIVING \r\n"
+						+ "FROM STUDENT_LECTUREINFO sl , STUDENTs s , LECTURE l \r\n"
+						+ "WHERE s.CODE = sl.S_CODE AND l.CODE = sl.L_CODE \r\n"
+						+ "ORDER BY s.CODE ");
+				rs = pstmt.executeQuery();
 
-			int rownum = pstmt.executeUpdate();
+				// 값을가져오는부분
+				while (rs.next()) {
+					StudentsFeeVo vo = new StudentsFeeVo(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
+							rs.getString(5));
 
-			if (rownum > 0) {
-				System.out.println("삽입성공");
-			} else {
-				System.out.println("삽입실패");
-			}
+					result.add(vo);
+				}
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				conts = new String[result.size()][5];
+
+				for (int i = 0; i < result.size(); i++) {
+					for (int j = 0; j < 5; j++) {
+						conts[i][j] = result.get(i).getsCode();
+						conts[i][++j] = result.get(i).getsName();
+						conts[i][++j] = result.get(i).getGiveDate();
+						conts[i][++j] = result.get(i).getLectureFee();
+						conts[i][++j] = result.get(i).getGiving();
+					}
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				if (rs != null) {
+					try {
+						rs.close();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
-		}
-	}
 
-	// public void printPicture(String name) throws IOException {
-	// Connection conn = null;
-	// PreparedStatement pstmt = null;
-	// ResultSet rs = null;
-	// try {
-	// conn = util.getConnection();
-	//
-	// System.out.println("접속성공");
-	//
-	// pstmt = conn.prepareStatement("SELECT SPICTURE FROM STUDENTS WHERE name = '"
-	// + name + "'");
-	// rs = pstmt.executeQuery();
-	//
-	// if (rs.next()) {
-	// do {
-	// InputStream is = rs.getBinaryStream("spicture");
-	// FileOutputStream fos = new FileOutputStream("../" + name + ".jpg");
-	//
-	// byte[] buf = new byte[512];
-	// int len;
-	// while (true) {
-	// len = is.read(buf);
-	// if (len <= 0)
-	// break;
-	//
-	// fos.write(buf, 0, len);
-	// }
-	//
-	// } while (rs.next());
-	// } else {
-	// System.out.println("데이터가 없습니다.");
-	// }
-	//
-	// } catch (SQLException e) {
-	// e.printStackTrace();
-	// } finally {
-	// if (rs != null) {
-	// try {
-	// rs.close();
-	// } catch (SQLException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// }
-	// if (pstmt != null) {
-	// try {
-	// pstmt.close();
-	// } catch (SQLException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// }
-	// if (conn != null) {
-	// try {
-	// conn.close();
-	// } catch (SQLException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// }
-	// }
-	// }
+			return conts;
+		}
 
 }
