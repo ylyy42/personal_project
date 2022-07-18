@@ -20,14 +20,24 @@ public class TeacherService {
 		return teacherDao.selectMember(name);
 	}
 	
-	// 학생 강좌 정보
+	// 선생님 강좌 정보
 	public String[][] listLec(String code) {
 		return teacherDao.selectMemberLec(code);
 	}
 	
-	// 학생 강좌 정보
+	// 선생님 강좌 정보
 	public String[][] listStu(String code) {
 		return teacherDao.selectstu(code);
+	}
+	
+	// 선생님 정보
+	public String[] inforNotList(String code) {
+		return teacherDao.selectMemberAllNotList(code);
+	}
+	
+	// 선생님정보 수정하기
+	public int updatetea(TeacherVo vo, String code) {
+		return teacherDao.updateMember(vo, code);
 	}
 
 }

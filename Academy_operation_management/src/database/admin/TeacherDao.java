@@ -192,7 +192,8 @@ public class TeacherDao {
 			System.out.println("접속성공");
 			pstmt = conn.prepareStatement("SELECT s.NAME , l.NAME , sl.ING \r\n"
 					+ "FROM STUDENTS s, TEACHER t , STUDENT_LECTUREINFO sl , LECTURE l \r\n"
-					+ "WHERE s.CODE = sl.S_CODE AND t.CODE = l.TEACHER_CODE AND sl.L_CODE = l.CODE AND t.CODE = " + code);
+					+ "WHERE s.CODE = sl.S_CODE AND t.CODE = l.TEACHER_CODE AND sl.L_CODE = l.CODE AND t.CODE = "
+					+ code);
 			rs = pstmt.executeQuery();
 
 			// 값을가져오는부분
@@ -234,6 +235,102 @@ public class TeacherDao {
 		}
 
 		return lecConts;
+	}
+
+	// 선생님 정보 가져오기 (리스트 X)
+	public String[] selectMemberAllNotList(String code) {
+		PreparedStatement pstmt = null; // 쿼리문사용을위한
+		ResultSet rs = null; // 셀렉트문의 결과는 Resultset으로 옴
+		List<TeacherVo> result = new ArrayList<>();
+		String[] conts = null;
+
+		try {
+
+			System.out.println("접속성공");
+			pstmt = conn.prepareStatement("select * from teacher WHERE code = " + code);
+			rs = pstmt.executeQuery();
+
+			// 값을가져오는부분
+			while (rs.next()) {
+				TeacherVo vo = new TeacherVo(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
+						rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9),
+						rs.getString(10));
+
+				result.add(vo);
+			}
+
+			conts = new String[] { result.get(0).getName(), result.get(0).getResidentId(), result.get(0).getPhone(),
+					result.get(0).getEmail(), result.get(0).getYear(), result.get(0).getSal(),
+					result.get(0).getMajor(), result.get(0).getAccountNumber(), result.get(0).getAddress() };
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return conts;
+	}
+
+	// 선생님 정보 수정하기
+	public int updateMember(TeacherVo vo, String code) {
+		PreparedStatement pstmt = null; // 쿼리문사용을위한
+		int result = 0; // insert할땐 반환값이 숫자 , 오라클에서 보면 삽입하면 '1행의 어쩌구 하고 앞에 1이 나옴'
+		try {
+
+			System.out.println("접속성공");
+
+			StringBuffer query = new StringBuffer();
+			query.append("update teacher");
+			query.append(
+					" set name = ?, resident_id = ?, phone = ?, email = ?, year = ?, sal = ?, major = ?, address = ?, account_number = ? ");
+			query.append("WHERE CODE = ?");
+
+			System.out.println(query);
+
+			pstmt = conn.prepareStatement(query.toString());
+			pstmt.setString(1, vo.getName());
+			pstmt.setString(2, vo.getResidentId());
+			pstmt.setString(3, vo.getPhone());
+			pstmt.setString(4, vo.getEmail());
+			pstmt.setString(5, vo.getYear());
+			pstmt.setString(6, vo.getSal());
+			pstmt.setString(7, vo.getMajor());
+			pstmt.setString(8, vo.getAccountNumber());
+			pstmt.setString(9, vo.getAddress());
+			pstmt.setString(10, code);
+			result = pstmt.executeUpdate(); // insert할때는 처음에 반환값이 숫자이기때문에 esecuteQuery함수를 쓸수가없다
+			System.out.println(result + "행이 수정되었습니다.");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return result;
 	}
 
 }

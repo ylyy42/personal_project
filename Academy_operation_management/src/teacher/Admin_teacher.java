@@ -34,16 +34,15 @@ public class Admin_teacher extends JFrame {
 	private TeacherService teacherService;
 	private JPanel contentPanel;
 	private JPanel panel;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
-	private JTextField textField_6;
-	private JTextField textField_7;
-	private JTextField textField_8;
-	private JTextField textField_9;
-	private JTextField textField_10;
+	static JTextField textField_1;
+	static JTextField textField_2;
+	static JTextField textField_3;
+	static JTextField textField_4;
+	static JTextField textField_5;
+	static JTextField textField_6;
+	static JTextField textField_7;
+	static JTextField textField_8;
+	static JTextField textField_10;
 	private JTabbedPane pane;
 	private JPanel pannel1;
 	private JPanel pannel2;
@@ -59,13 +58,14 @@ public class Admin_teacher extends JFrame {
 	private JTable jtable1;
 	private JTable jtable2;
 	private int row;
-	private String code;
+	static String code;
 	private List<TeacherVo> teacherInfo;
 	private String[][] teacherLecInfo;
 	private String[][] teacherStuInfo;
 	private String[] oneH = { "강의명","강의시작날짜","강의학생수"};
 	private String[] twoH = new String[] {"학생명", "수강중인 강의", "상태" };
 	private Button button;
+	private Button button_2;
 	
 	Admin_teacher() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -212,7 +212,7 @@ public class Admin_teacher extends JFrame {
 		lblNewLabel_2_1_1_4.setBounds(342, 192, 72, 15);
 		contentPanel_1.add(lblNewLabel_2_1_1_4);
 		
-		JLabel lblNewLabel_2_1_1_5 = new JLabel("\uD559\uBD80\uBAA8\uC5F0\uB77D\uCC98");
+		JLabel lblNewLabel_2_1_1_5 = new JLabel("\uACC4\uC88C\uBC88\uD638");
 		lblNewLabel_2_1_1_5.setBounds(342, 220, 82, 15);
 		contentPanel_1.add(lblNewLabel_2_1_1_5);
 
@@ -292,6 +292,11 @@ public class Admin_teacher extends JFrame {
 		contentPanel_1.add(pane);
 
 		Button button_1 = new Button("\uAC1C\uC778\uC815\uBCF4\uC218\uC815");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Modify_teacher();
+			}
+		});
 		button_1.setBounds(99, 246, 106, 23);
 		contentPanel_1.add(button_1);
 		
@@ -304,6 +309,10 @@ public class Admin_teacher extends JFrame {
 		});
 		button.setBounds(28, 18, 80, 25);
 		getContentPane().add(button);
+		
+		button_2 = new Button("\uC2E0\uADDC\uB4F1\uB85D");
+		button_2.setBounds(944, 52, 76, 23);
+		getContentPane().add(button_2);
 		
 		setVisible(true);
 	}
