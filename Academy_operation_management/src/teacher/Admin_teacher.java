@@ -67,7 +67,7 @@ public class Admin_teacher extends JFrame {
 	private Button button;
 	private Button button_2;
 	
-	Admin_teacher() {
+	public Admin_teacher() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(1125, 650);
 		setLocationRelativeTo(null);
@@ -200,7 +200,7 @@ public class Admin_teacher extends JFrame {
 		lblNewLabel_2_1_1_1.setBounds(342, 108, 57, 15);
 		contentPanel_1.add(lblNewLabel_2_1_1_1);
 
-		JLabel lblNewLabel_2_1_1_2 = new JLabel("\uADFC\uBB34\uC5F0\uCC28");
+		JLabel lblNewLabel_2_1_1_2 = new JLabel("\uC785\uC0AC\uC5F0\uB3C4");
 		lblNewLabel_2_1_1_2.setBounds(342, 136, 57, 15);
 		contentPanel_1.add(lblNewLabel_2_1_1_2);
 
@@ -311,6 +311,11 @@ public class Admin_teacher extends JFrame {
 		getContentPane().add(button);
 		
 		button_2 = new Button("\uC2E0\uADDC\uB4F1\uB85D");
+		button_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Registration_teacher();
+			}
+		});
 		button_2.setBounds(944, 52, 76, 23);
 		getContentPane().add(button_2);
 		

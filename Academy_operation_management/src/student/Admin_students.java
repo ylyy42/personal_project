@@ -3,16 +3,24 @@ package student;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -76,8 +84,19 @@ public class Admin_students extends JFrame {
 	static DefaultTableModel model1 = new DefaultTableModel();
 	private DefaultTableModel model2 = new DefaultTableModel();
 	static DefaultTableModel model3 = new DefaultTableModel();
+	private BufferedImage bi;
+	private JPanel contentPanel_1;
+	private JLayeredPane layeredPane;
 	
 	public Admin_students() {
+		
+		class myPanel extends JPanel {
+			public void paint(Graphics g) {
+				Dimension d = getSize();
+				g.drawImage(bi, 0, 0, d.width, d.height, null);
+			}
+		}
+		
 		studentsService = new StudentsService(new StudentsDao());
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -117,6 +136,25 @@ public class Admin_students extends JFrame {
 				row = jtable.getSelectedRow();
 				code = (String) jtable.getModel().getValueAt(row, 0);
 				stuInfo = studentsService.infor(code);
+				try {
+					bi = studentsService.PrintPic(code);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				if(bi != null) {
+					myPanel panel = new myPanel();
+					panel.setBounds(0, 0, 250, 210);
+					layeredPane.add(panel);
+				} else {
+					panel = new JPanel();
+					panel.setBounds(0, 0, 250, 210);
+					layeredPane.add(panel);
+				}
 				
 				textField_1.setText(stuInfo.get(0).getName());
 				textField_2.setText(stuInfo.get(0).getResidentId());
@@ -195,19 +233,18 @@ public class Admin_students extends JFrame {
 		});
 		contentPanel.add(jscp);
 
-		JPanel contentPanel_1 = new JPanel();
+		contentPanel_1 = new JPanel();
 		contentPanel_1.setLayout(null);
 		contentPanel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		contentPanel_1.setBackground(UIManager.getColor("Button.background"));
 		contentPanel_1.setBounds(370, 84, 663, 485);
 		getContentPane().add(contentPanel_1);
 
-		panel = new JPanel();
-		panel.setBackground(UIManager.getColor("List.selectionBackground"));
-		panel.setBounds(26, 24, 250, 210);
-		panel.setLayout(null);
-		contentPanel_1.add(panel);
-
+		layeredPane = new JLayeredPane();
+		layeredPane.setBounds(26, 24, 250, 210);
+		layeredPane.setLayout(null);
+		contentPanel_1.add(layeredPane);
+		
 		JLabel lblNewLabel_2 = new JLabel("\uC774\uB984");
 		lblNewLabel_2.setBounds(342, 24, 57, 15);
 		contentPanel_1.add(lblNewLabel_2);
@@ -330,8 +367,29 @@ public class Admin_students extends JFrame {
 				}
 			}
 		});
-		button_1.setBounds(99, 246, 106, 23);
+		button_1.setBounds(164, 246, 106, 23);
 		contentPanel_1.add(button_1);
+		
+		Button button_1_1 = new Button("\uC0AC\uC9C4\uB4F1\uB85D");
+		button_1_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fc = new JFileChooser();
+				int result = fc.showOpenDialog(Admin_students.this);
+				if(result == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					try {
+						if(studentsService.InsertPic(file, code) == 1) {
+							JOptionPane.showMessageDialog(null, "사진 등록이 완료되었습니다.");
+						}
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		button_1_1.setBounds(36, 246, 106, 23);
+		contentPanel_1.add(button_1_1);
 
 		Button button_2 = new Button("\uC2E0\uADDC\uB4F1\uB85D");
 		button_2.addActionListener(new ActionListener() {
@@ -425,7 +483,7 @@ public class Admin_students extends JFrame {
 
 		return pane;
 	}
-
+	
 	public static void main(String[] args) throws SQLException {
 		Admin_students frame = new Admin_students();
 	}

@@ -1,10 +1,8 @@
-package student;
+package teacher;
 
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Label;
-import java.awt.Panel;
 import java.awt.Rectangle;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
@@ -12,28 +10,28 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import database.admin.StudentsDao;
-import database.admin.StudentsService;
-import database.admin.StudentsVo;
+import database.admin.TeacherDao;
+import database.admin.TeacherService;
+import database.admin.TeacherVo;
+import student.Admin_students;
 
-public class Registration_students extends JFrame {
-
+public class Registration_teacher extends JFrame {
 	private JPanel contentPanel;
-	private StudentsService studentsService;
-	private String[] tHeader = new String[] {"코드", "이름", "학교", "학년" };
+	private TeacherService teacherService;
 	private String[][] tConts;
+	private String[] tHeader = new String[] { "코드", "이름", "과목" };
 
-	public Registration_students() {
-		studentsService = new StudentsService(new StudentsDao());
-
+	public Registration_teacher() {
+		teacherService = new TeacherService(new TeacherDao());
 		setBounds(new Rectangle(0, 0, 1000, 0));
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(669, 560);
 		setLocationRelativeTo(null);
+
 		contentPanel = new JPanel();
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPanel);
@@ -61,19 +59,20 @@ public class Registration_students extends JFrame {
 		lblNewLabel_1_1_1_1.setBounds(87, 143, 57, 15);
 		panel.add(lblNewLabel_1_1_1_1);
 
-		JLabel lblNewLabel_1_1_1_2 = new JLabel("\uD559\uAD50");
+		JLabel lblNewLabel_1_1_1_2 = new JLabel("\uC785\uC0AC\uC5F0\uB3C4");
 		lblNewLabel_1_1_1_2.setBounds(87, 171, 57, 15);
 		panel.add(lblNewLabel_1_1_1_2);
 
-		JLabel lblNewLabel_1_1_1_3 = new JLabel("\uD559\uB144");
+		JLabel lblNewLabel_1_1_1_3 = new JLabel("\uC5F0\uBD09");
 		lblNewLabel_1_1_1_3.setBounds(87, 201, 57, 15);
 		panel.add(lblNewLabel_1_1_1_3);
 
-		JLabel lblNewLabel_1_1_1_4 = new JLabel("\uD559\uBD80\uBAA8\uC774\uB984");
+		JLabel lblNewLabel_1_1_1_4 = new JLabel("\uC804\uACF5");
 		lblNewLabel_1_1_1_4.setBounds(87, 233, 72, 15);
 		panel.add(lblNewLabel_1_1_1_4);
 
-		JLabel lblNewLabel_1_1_1_5 = new JLabel("\uD559\uBD80\uBAA8\uC5F0\uB77D\uCC98");
+		JLabel lblNewLabel_1_1_1_5 = new JLabel("\uACC4\uC88C\uBC88\uD638");
+		lblNewLabel_1_1_1_5.setToolTipText("");
 		lblNewLabel_1_1_1_5.setBounds(87, 265, 85, 15);
 		panel.add(lblNewLabel_1_1_1_5);
 
@@ -120,23 +119,25 @@ public class Registration_students extends JFrame {
 		Button button_1 = new Button("\uB4F1\uB85D\uD558\uAE30");
 		button_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				StudentsVo vo = new StudentsVo(1, textField.getText(), textField_1.getText(), textField_1_1.getText(), textField_1_1_1.getText(), textField_1_1_1_1.getText(),
-						textField_1_1_1_2.getText(), textField_1_1_1_3.getText(), textField_1_1_1_4.getText(), textField_1_1_1_6.getText());
-				
-				if(studentsService.regist(vo) == 1) {
-					Admin_students.model.setRowCount(0);
-					tConts = studentsService.listAll();
-					Admin_students.model.setDataVector(tConts, tHeader);
+				TeacherVo vo = new TeacherVo("1", textField.getText(), textField_1.getText(), textField_1_1.getText(),
+						textField_1_1_1.getText(), textField_1_1_1_1.getText(), textField_1_1_1_2.getText(),
+						textField_1_1_1_3.getText(), textField_1_1_1_6.getText(), textField_1_1_1_4.getText());
+
+				if (teacherService.regist(vo) == 1) {
+					Admin_teacher.model.setRowCount(0);
+					tConts = teacherService.listAll();
+					Admin_teacher.model.setDataVector(tConts, tHeader);
 					dispose();
 				}
+
 			}
 		});
-		button_1.setBounds(403, 356, 105, 34);
+		button_1.setBounds(438, 360, 105, 34);
 		panel.add(button_1);
 
-		JLabel lblNewLabel = new JLabel("\uD559\uC0DD\uC2E0\uADDC\uB4F1\uB85D");
+		JLabel lblNewLabel = new JLabel("\uC120\uC0DD\uB2D8\uC2E0\uADDC\uB4F1\uB85D");
 		lblNewLabel.setFont(new Font("맑은 고딕", Font.BOLD, 15));
-		lblNewLabel.setBounds(40, 31, 90, 15);
+		lblNewLabel.setBounds(40, 31, 117, 15);
 		contentPanel.add(lblNewLabel);
 
 		Button button_1_1 = new Button("\uCDE8\uC18C");
@@ -145,13 +146,9 @@ public class Registration_students extends JFrame {
 				dispose();
 			}
 		});
-		button_1_1.setBounds(498, 16, 105, 34);
+		button_1_1.setBounds(500, 16, 105, 34);
 		contentPanel.add(button_1_1);
 
 		setVisible(true);
-	}
-
-	public static void main(String[] args) {
-		Registration_students rFrame = new Registration_students();
 	}
 }

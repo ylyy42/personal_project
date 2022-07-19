@@ -23,6 +23,49 @@ public class TeacherDao {
 		}
 	}
 
+	// 등록하기
+	public int insertMember(TeacherVo vo) {
+		PreparedStatement pstmt = null; // 쿼리문사용을위한
+		int result = 0; // insert할땐 반환값이 숫자 , 오라클에서 보면 삽입하면 '1행의 어쩌구 하고 앞에 1이 나옴'
+		try {
+
+			System.out.println("접속성공");
+
+			StringBuffer query = new StringBuffer();
+			query.append("INSERT INTO teacher (code, name, resident_id, phone, email, YEAR, sal, major, address, account_number)");
+			query.append("VALUES (teacher_seq.nextval,?,?,?,");
+			query.append("?,?,?,?,?,?)");
+
+			System.out.println(query);
+
+			pstmt = conn.prepareStatement(query.toString());
+			pstmt.setString(1, vo.getName());
+			pstmt.setString(2, vo.getResidentId());
+			pstmt.setString(3, vo.getPhone());
+			pstmt.setString(4, vo.getEmail());
+			pstmt.setString(5, vo.getYear());
+			pstmt.setString(6, vo.getSal());
+			pstmt.setString(7, vo.getMajor());
+			pstmt.setString(8, vo.getAddress());
+			pstmt.setString(9, vo.getAccountNumber());
+			result = pstmt.executeUpdate(); // insert할때는 처음에 반환값이 숫자이기때문에 esecuteQuery함수를 쓸수가없다
+			System.out.println(result + "행이 삽입되었습니다.");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return result;
+	}
+
 	// 선생님 리스트 가져오기
 	public String[][] selectMemberAll() {
 		PreparedStatement pstmt = null; // 쿼리문사용을위한
@@ -260,8 +303,8 @@ public class TeacherDao {
 			}
 
 			conts = new String[] { result.get(0).getName(), result.get(0).getResidentId(), result.get(0).getPhone(),
-					result.get(0).getEmail(), result.get(0).getYear(), result.get(0).getSal(),
-					result.get(0).getMajor(), result.get(0).getAccountNumber(), result.get(0).getAddress() };
+					result.get(0).getEmail(), result.get(0).getYear(), result.get(0).getSal(), result.get(0).getMajor(),
+					result.get(0).getAccountNumber(), result.get(0).getAddress() };
 
 		} catch (SQLException e) {
 			e.printStackTrace();

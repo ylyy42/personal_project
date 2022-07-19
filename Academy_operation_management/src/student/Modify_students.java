@@ -45,7 +45,6 @@ public class Modify_students extends JFrame {
 		RealCode(code);
 		
 		setBounds(new Rectangle(0, 0, 1000, 0));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(629, 560);
 		getContentPane().setLayout(null);
 		

@@ -1,11 +1,19 @@
 package database.admin;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import database.JdbcConnectionUtil;
 
@@ -186,7 +194,7 @@ public class StudentsDao {
 
 		return result;
 	}
-	
+
 	// 학생 정보 수정하기
 	public int updateFee(StudentsFeeVo vo) {
 		PreparedStatement pstmt = null; // 쿼리문사용을위한
@@ -384,7 +392,8 @@ public class StudentsDao {
 			System.out.println("접속성공");
 			pstmt = conn.prepareStatement("SELECT l.code, l.NAME , sl.GIVE_DATE , sl.GIVING,t.NAME\r\n"
 					+ "FROM STUDENTS s , LECTURE l , STUDENT_LECTUREINFO sl, TEACHER t \r\n" + "WHERE s.CODE = " + code
-					+ "\r\n" + "AND s.CODE = sl.S_CODE AND l.CODE = sl.L_CODE AND l.TEACHER_CODE = t.CODE ORDER BY l.code ");
+					+ "\r\n"
+					+ "AND s.CODE = sl.S_CODE AND l.CODE = sl.L_CODE AND l.TEACHER_CODE = t.CODE ORDER BY l.code ");
 			rs = pstmt.executeQuery();
 
 			// 값을가져오는부분
@@ -494,44 +503,44 @@ public class StudentsDao {
 
 		return lecConts;
 	}
-	
+
 	// 학생 성적 저장
-		public int StuScoreIn (StudentsScoVo vo) {
-			PreparedStatement pstmt = null; // 쿼리문사용을위한
-			int result = 0; // insert할땐 반환값이 숫자 , 오라클에서 보면 삽입하면 '1행의 어쩌구 하고 앞에 1이 나옴'
-			try {
+	public int StuScoreIn(StudentsScoVo vo) {
+		PreparedStatement pstmt = null; // 쿼리문사용을위한
+		int result = 0; // insert할땐 반환값이 숫자 , 오라클에서 보면 삽입하면 '1행의 어쩌구 하고 앞에 1이 나옴'
+		try {
 
-				System.out.println("접속성공");
+			System.out.println("접속성공");
 
-				StringBuffer query = new StringBuffer();
-				query.append("INSERT INTO score (edate, ename, escore, scode)");
-				query.append(" VALUES (?,?,?,?)");
+			StringBuffer query = new StringBuffer();
+			query.append("INSERT INTO score (edate, ename, escore, scode)");
+			query.append(" VALUES (?,?,?,?)");
 
-				System.out.println(query);
+			System.out.println(query);
 
-				pstmt = conn.prepareStatement(query.toString());
-				pstmt.setString(1, vo.getEdate());
-				pstmt.setString(2, vo.getEname());
-				pstmt.setString(3, vo.getEscore());
-				pstmt.setString(4, vo.getScode());
+			pstmt = conn.prepareStatement(query.toString());
+			pstmt.setString(1, vo.getEdate());
+			pstmt.setString(2, vo.getEname());
+			pstmt.setString(3, vo.getEscore());
+			pstmt.setString(4, vo.getScode());
 
-				result = pstmt.executeUpdate(); // insert할때는 처음에 반환값이 숫자이기때문에 esecuteQuery함수를 쓸수가없다
-				System.out.println(result + "행이 삽입되었습니다.");
+			result = pstmt.executeUpdate(); // insert할때는 처음에 반환값이 숫자이기때문에 esecuteQuery함수를 쓸수가없다
+			System.out.println(result + "행이 삽입되었습니다.");
 
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				if (pstmt != null) {
-					try {
-						pstmt.close();
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
-			return result;
 		}
+		return result;
+	}
 
 	// 학생 출석하기
 	public int StuIncheck(StudentsAttVo vo) {
@@ -613,9 +622,9 @@ public class StudentsDao {
 		try {
 
 			System.out.println("접속성공");
-			pstmt = conn.prepareStatement("SELECT as2.INTIME, as2.OUTTIME \r\n"
-					+ "FROM STUDENTS s , ATTENDANCE_STUDENT as2 \r\n" + "WHERE s.CODE = " + code
-					+ " AND s.CODE = as2.STUDENT_CODE ");
+			pstmt = conn.prepareStatement(
+					"SELECT as2.INTIME, as2.OUTTIME \r\n" + "FROM STUDENTS s , ATTENDANCE_STUDENT as2 \r\n"
+							+ "WHERE s.CODE = " + code + " AND s.CODE = as2.STUDENT_CODE ");
 			rs = pstmt.executeQuery();
 
 			// 값을가져오는부분
@@ -712,65 +721,126 @@ public class StudentsDao {
 
 		return ScoConts;
 	}
-	
+
 	// 학생 강좌 정보
-		public String[][] selectFee() {
-			PreparedStatement pstmt = null; // 쿼리문사용을위한
-			ResultSet rs = null; // 셀렉트문의 결과는 Resultset으로 옴
-			List<StudentsFeeVo> result = new ArrayList<>();
-			String[][] conts = null;
+	public String[][] selectFee() {
+		PreparedStatement pstmt = null; // 쿼리문사용을위한
+		ResultSet rs = null; // 셀렉트문의 결과는 Resultset으로 옴
+		List<StudentsFeeVo> result = new ArrayList<>();
+		String[][] conts = null;
 
-			try {
+		try {
 
-				System.out.println("접속성공");
-				pstmt = conn.prepareStatement("SELECT s.CODE  ,s.NAME , sl.GIVE_DATE , l.LECTURE_FEE , sl.GIVING \r\n"
-						+ "FROM STUDENT_LECTUREINFO sl , STUDENTs s , LECTURE l \r\n"
-						+ "WHERE s.CODE = sl.S_CODE AND l.CODE = sl.L_CODE \r\n"
-						+ "ORDER BY s.CODE ");
-				rs = pstmt.executeQuery();
+			System.out.println("접속성공");
+			pstmt = conn.prepareStatement("SELECT s.CODE  ,s.NAME , sl.GIVE_DATE , l.LECTURE_FEE , sl.GIVING \r\n"
+					+ "FROM STUDENT_LECTUREINFO sl , STUDENTs s , LECTURE l \r\n"
+					+ "WHERE s.CODE = sl.S_CODE AND l.CODE = sl.L_CODE \r\n" + "ORDER BY s.CODE ");
+			rs = pstmt.executeQuery();
 
-				// 값을가져오는부분
-				while (rs.next()) {
-					StudentsFeeVo vo = new StudentsFeeVo(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
-							rs.getString(5));
+			// 값을가져오는부분
+			while (rs.next()) {
+				StudentsFeeVo vo = new StudentsFeeVo(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
+						rs.getString(5));
 
-					result.add(vo);
-				}
+				result.add(vo);
+			}
 
-				conts = new String[result.size()][5];
+			conts = new String[result.size()][5];
 
-				for (int i = 0; i < result.size(); i++) {
-					for (int j = 0; j < 5; j++) {
-						conts[i][j] = result.get(i).getsCode();
-						conts[i][++j] = result.get(i).getsName();
-						conts[i][++j] = result.get(i).getGiveDate();
-						conts[i][++j] = result.get(i).getLectureFee();
-						conts[i][++j] = result.get(i).getGiving();
-					}
-				}
-
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				if (rs != null) {
-					try {
-						rs.close();
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				if (pstmt != null) {
-					try {
-						pstmt.close();
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+			for (int i = 0; i < result.size(); i++) {
+				for (int j = 0; j < 5; j++) {
+					conts[i][j] = result.get(i).getsCode();
+					conts[i][++j] = result.get(i).getsName();
+					conts[i][++j] = result.get(i).getGiveDate();
+					conts[i][++j] = result.get(i).getLectureFee();
+					conts[i][++j] = result.get(i).getGiving();
 				}
 			}
 
-			return conts;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
+
+		return conts;
+	}
+
+	// 사진 저장하기
+	public int pictureIn(File fc, String code) throws FileNotFoundException {
+		PreparedStatement pstmt = null; // 쿼리문사용을위한
+		int result = 0; // insert할땐 반환값이 숫자 , 오라클에서 보면 삽입하면 '1행의 어쩌구 하고 앞에 1이 나옴'
+		try {
+
+			System.out.println("접속성공");
+
+			StringBuffer query = new StringBuffer();
+			query.append("UPDATE STUDENTS SET SPICTURE = ? WHERE CODE = ?");
+
+			System.out.println(query);
+
+			FileInputStream fis = new FileInputStream(fc);
+			pstmt = conn.prepareStatement(query.toString());
+			pstmt.setBinaryStream(1, fis, (int) fc.length());
+			pstmt.setString(2, code);
+
+			result = pstmt.executeUpdate(); // insert할때는 처음에 반환값이 숫자이기때문에 esecuteQuery함수를 쓸수가없다
+			System.out.println(result + "행이 삽입되었습니다.");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return result;
+	}
+
+	// 사진 뿌려주기
+	public BufferedImage picturePrint(String code) throws IOException, SQLException {
+
+		PreparedStatement pstmt = null; // 쿼리문사용을위한
+		ResultSet rs = null; // 셀렉트문의 결과는 Resultset으로 옴
+
+		System.out.println("접속성공");
+		pstmt = conn.prepareStatement("SELECT s.SPICTURE FROM STUDENTS s WHERE code = "+ code +" AND NOT s.spicture IS NULL ");
+		rs = pstmt.executeQuery();
+		rs.next();
+		
+		if (rs.getRow() == 0) {
+			System.out.println("등록된 사진이 없습니다.");
+		} else {
+			System.out.println("등록된 사진이 있습니다.");
+			InputStream in = rs.getBinaryStream(1);
+			BufferedImage bi = ImageIO.read(in);
+			in.close();
+			
+			return bi;
+		}
+		
+
+		return null;
+	}
 
 }

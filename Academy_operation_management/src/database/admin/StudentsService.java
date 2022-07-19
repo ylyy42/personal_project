@@ -1,6 +1,10 @@
 package database.admin;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 
@@ -89,6 +93,16 @@ public class StudentsService {
 	// 학생 점수 저장
 	public int insertScore(StudentsScoVo vo) {
 		return studentsdao.StuScoreIn(vo);
+	}
+	
+	// 사진저장
+	public int InsertPic(File fc, String code) throws FileNotFoundException {
+		return studentsdao.pictureIn(fc, code);
+	}
+	
+	// 사진 출력
+	public BufferedImage PrintPic(String code) throws IOException, SQLException {
+		return studentsdao.picturePrint(code);
 	}
 	
 }

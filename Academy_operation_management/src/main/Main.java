@@ -12,6 +12,7 @@ import lecture.Lecture;
 import student.Admin_students;
 import student.Attendance_students;
 import student.Fee_students;
+import teacher.Admin_teacher;
 
 public class Main extends JFrame {
 	
@@ -38,6 +39,12 @@ public class Main extends JFrame {
 		contentPanel.add(btnNewButton);
 		
 		JButton btnNewButton_2 = new JButton("\uC120\uC0DD\uB2D8\uAD00\uB9AC");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Admin_teacher();
+				dispose();
+			}
+		});
 		btnNewButton_2.setBounds(472, 143, 182, 119);
 		contentPanel.add(btnNewButton_2);
 		
@@ -71,9 +78,5 @@ public class Main extends JFrame {
 		contentPanel.add(btnNewButton_3_1_1);
 		
 		setVisible(true);
-	}
-	
-	public static void main(String[] args) {
-		Main frame = new Main();
 	}
 }

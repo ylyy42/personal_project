@@ -10,6 +10,11 @@ public class TeacherService {
 		this.teacherDao = teacherDao;
 	}
 	
+	// 등록
+	public int regist(TeacherVo vo) {
+		return teacherDao.insertMember(vo);
+	}
+	
 	// 전체조회
 	public String[][] listAll() {
 		return teacherDao.selectMemberAll();
