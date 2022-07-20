@@ -3,15 +3,26 @@ package teacher;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -22,12 +33,14 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
-import database.admin.StudentsVo;
+import database.admin.StudentsDao;
+import database.admin.StudentsService;
 import database.admin.TeacherDao;
 import database.admin.TeacherService;
 import database.admin.TeacherVo;
 import main.Main;
-import student.Lecture_registration;
+import student.Admin_students;
+import student.Modify_students;
 
 public class Admin_teacher extends JFrame {
 	private Container con;
@@ -66,12 +79,32 @@ public class Admin_teacher extends JFrame {
 	private String[] twoH = new String[] {"학생명", "수강중인 강의", "상태" };
 	private Button button;
 	private Button button_2;
+	private BufferedImage bi;
+	private JLayeredPane layeredPane;
+	private Button button_3;
 	
 	public Admin_teacher() {
+		
+		class myPanel extends JPanel {
+			public void paint(Graphics g) {
+				Dimension d = getSize();
+				g.drawImage(bi, 0, 0, d.width, d.height, null);
+			}
+		}
+		
+		class myPanel2 extends JPanel {
+			public void paint(Graphics g) {
+				Dimension d = getSize();
+				ImageIcon image = new ImageIcon("C:\\Users\\Administrator.User -2022YSWXV\\Desktop\\personal_project\\Academy_operation_management\\src\\images\\q.jpg");
+				g.drawImage(image.getImage(), 0, 0, d.width, d.height, null);
+			}
+		}
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(1125, 650);
 		setLocationRelativeTo(null);
 		teacherService = new TeacherService(new TeacherDao());
+		
 		contentPanel = new JPanel();
 		contentPanel.setBackground(UIManager.getColor("InternalFrame.minimizeIconBackground"));
 		contentPanel.setBounds(51, 84, 280, 433);
@@ -97,6 +130,26 @@ public class Admin_teacher extends JFrame {
 				row = jtable.getSelectedRow();
 				code = (String) jtable.getModel().getValueAt(row, 0);
 				teacherInfo = teacherService.infor(code);
+				
+				try {
+					bi = teacherService.PrintPic(code);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				if(bi != null) {
+					myPanel panel = new myPanel();
+					panel.setBounds(0, 0, 250, 210);
+					layeredPane.add(panel);
+				} else {
+					myPanel2 panel = new myPanel2();
+					panel.setBounds(0, 0, 250, 210);
+					layeredPane.add(panel);
+				}
 				
 				textField_1.setText(teacherInfo.get(0).getName());
 				textField_2.setText(teacherInfo.get(0).getResidentId());
@@ -177,11 +230,10 @@ public class Admin_teacher extends JFrame {
 		contentPanel_1.setBounds(370, 84, 663, 485);
 		getContentPane().add(contentPanel_1);
 
-		panel = new JPanel();
-		panel.setBackground(UIManager.getColor("List.selectionBackground"));
-		panel.setBounds(26, 24, 250, 210);
-		panel.setLayout(null);
-		contentPanel_1.add(panel);
+		layeredPane = new JLayeredPane();
+		layeredPane.setBounds(26, 24, 250, 210);
+		layeredPane.setLayout(null);
+		contentPanel_1.add(layeredPane);
 		
 		JLabel lblNewLabel_2 = new JLabel("\uC774\uB984");
 		lblNewLabel_2.setBounds(342, 24, 57, 15);
@@ -294,11 +346,37 @@ public class Admin_teacher extends JFrame {
 		Button button_1 = new Button("\uAC1C\uC778\uC815\uBCF4\uC218\uC815");
 		button_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new Modify_teacher();
+				if(code != null) {
+					new Modify_teacher();
+				} else {
+					JOptionPane.showMessageDialog(null, "선생님을 선택해주세요.");
+				}
+				
 			}
 		});
-		button_1.setBounds(99, 246, 106, 23);
+		button_1.setBounds(162, 245, 106, 23);
 		contentPanel_1.add(button_1);
+		
+		button_3 = new Button("\uC0AC\uC9C4\uB4F1\uB85D");
+		button_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fc = new JFileChooser();
+				int result = fc.showOpenDialog(Admin_teacher.this);
+				if(result == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					try {
+						if(teacherService.InsertPic(file, code) == 1) {
+							JOptionPane.showMessageDialog(null, "사진 등록이 완료되었습니다.");
+						}
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		button_3.setBounds(39, 246, 106, 23);
+		contentPanel_1.add(button_3);
 		
 		button = new Button("\uBA54\uC778");
 		button.addActionListener(new ActionListener() {
@@ -342,9 +420,5 @@ public class Admin_teacher extends JFrame {
 		pane.addTab("수강생현황", pannel2);
 		
 		return pane;
-	}
-	
-	public static void main(String[] args) {
-		Admin_teacher frame = new Admin_teacher();
 	}
 }

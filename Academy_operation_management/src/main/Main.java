@@ -18,7 +18,6 @@ public class Main extends JFrame {
 	
 	private JPanel contentPanel;
 	
-	
 	public Main() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(1125, 650);

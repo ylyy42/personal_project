@@ -34,10 +34,6 @@ public class Join extends JFrame {
 	private JTextField textField;
 	private boolean idCheck = false;
 
-	public static void main(String[] args) {
-		Join frame = new Join();
-	}
-
 	public Join() {
 		ManagerService managerService = new ManagerService(new ManagerDao());
 		

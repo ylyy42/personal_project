@@ -84,7 +84,4 @@ public class Fee_students extends JFrame {
 		setVisible(true);
 	}
 
-	public static void main(String[] args) {
-		Fee_students frame = new Fee_students();
-	}
 }

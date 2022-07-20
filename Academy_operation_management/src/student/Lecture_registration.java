@@ -88,7 +88,4 @@ public class Lecture_registration extends JFrame {
 		setVisible(true);
 	}
 	
-	public static void main(String[] args) {
-		Lecture_registration frame = new Lecture_registration();
-	}
 }

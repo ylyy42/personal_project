@@ -170,13 +170,4 @@ public class Modify_students extends JFrame {
 		setVisible(true);
 	}
 	
-	
-	public static void main(String[] args) {
-		try {
-			Modify_students frame = new Modify_students();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 }

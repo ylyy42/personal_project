@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -65,7 +66,7 @@ public class Admin_students extends JFrame {
 	private JPanel pannel1;
 	private JPanel pannel2;
 	private JPanel pannel3;
-	private JTable jtable1;
+	static JTable jtable1;
 	private JTable jtable2;
 	private JTable jtable3;
 	private String[] oneH = { "강좌번호","강좌명","담당 선생님", "수강료청구일", "수납여부" };
@@ -78,7 +79,7 @@ public class Admin_students extends JFrame {
 	private int row;
 	private int row2;
 	private int row3;
-	private int sCode;
+	static int sCode;
 	private int lCode;
 	static DefaultTableModel model = new DefaultTableModel();
 	static DefaultTableModel model1 = new DefaultTableModel();
@@ -94,6 +95,14 @@ public class Admin_students extends JFrame {
 			public void paint(Graphics g) {
 				Dimension d = getSize();
 				g.drawImage(bi, 0, 0, d.width, d.height, null);
+			}
+		}
+		
+		class myPanel2 extends JPanel {
+			public void paint(Graphics g) {
+				Dimension d = getSize();
+				ImageIcon image = new ImageIcon("C:\\Users\\Administrator.User -2022YSWXV\\Desktop\\personal_project\\Academy_operation_management\\src\\images\\q.jpg");
+				g.drawImage(image.getImage(), 0, 0, d.width, d.height, null);
 			}
 		}
 		
@@ -151,7 +160,7 @@ public class Admin_students extends JFrame {
 					panel.setBounds(0, 0, 250, 210);
 					layeredPane.add(panel);
 				} else {
-					panel = new JPanel();
+					myPanel2 panel = new myPanel2();
 					panel.setBounds(0, 0, 250, 210);
 					layeredPane.add(panel);
 				}
@@ -167,6 +176,7 @@ public class Admin_students extends JFrame {
 				textField_10.setText(stuInfo.get(0).getAddress());
 
 				stuLecInfo = studentsService.listLec(code);
+				
 				model1.setDataVector(stuLecInfo, oneH);
 				jtable1 = new JTable(model1) {
 					public boolean isCellEditable(int row, int column) {
@@ -409,14 +419,13 @@ public class Admin_students extends JFrame {
 		});
 		button_3.setBounds(51, 23, 76, 23);
 		getContentPane().add(button_3);
+		
+		model1.fireTableDataChanged();
 
 		setVisible(true);
 	}
 
 	public JTabbedPane createTabbedPane() {
-		String[][] one = { { "", "", "", "", "" } };
-		String[][] two = { { "", "", "", "" } };
-		String[][] three = { { "", "", "" } };
 
 		pannel1 = new JPanel();
 		pannel1.setBackground(UIManager.getColor("InternalFrame.inactiveTitleGradient"));
@@ -452,19 +461,7 @@ public class Admin_students extends JFrame {
 		Button button_4 = new Button("\uAC15\uC88C\uC0AD\uC81C");
 		button_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				row2 = jtable.getSelectedRow();
-				row3 = jtable1.getSelectedRow();
-				System.out.println(row3);
-				
-				sCode = Integer.parseInt((String) jtable.getModel().getValueAt(row2, 0));
-				lCode = Integer.parseInt((String) jtable1.getModel().getValueAt(row3, 0));
-				
-				if(studentsService.stuLecDelete(sCode, lCode) == 1) {
-					JOptionPane.showMessageDialog(null, "강의 삭제가 완료됬습니다.");
-					model1.setRowCount(0);
-					String[][] stuLecInfo = studentsService.listLec(code);
-					model1.setDataVector(stuLecInfo, oneH);
-				}
+				new Delete_lecture();
 			}
 		});
 		button_4.setBounds(418, 129, 87, 23);
@@ -482,10 +479,6 @@ public class Admin_students extends JFrame {
 		pannel3.add(button);
 
 		return pane;
-	}
-	
-	public static void main(String[] args) throws SQLException {
-		Admin_students frame = new Admin_students();
 	}
 	
 }

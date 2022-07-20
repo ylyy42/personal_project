@@ -35,7 +35,6 @@ public class Modify_teacher extends JFrame {
 	
 	public Modify_teacher() {
 		setBounds(new Rectangle(0, 0, 1000, 0));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(629, 560);
 		getContentPane().setLayout(null);
 		setLocationRelativeTo(null);

@@ -151,7 +151,4 @@ public class Registration_students extends JFrame {
 		setVisible(true);
 	}
 
-	public static void main(String[] args) {
-		Registration_students rFrame = new Registration_students();
-	}
 }

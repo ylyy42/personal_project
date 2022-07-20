@@ -86,8 +86,4 @@ public class Attendance_students extends JFrame {
 		
 		setVisible(true);
 	}
-	
-	public static void main(String[] args) {
-		Attendance_students frame = new Attendance_students();
-	}
 }

@@ -1,11 +1,19 @@
 package database.admin;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import database.JdbcConnectionUtil;
 
@@ -32,7 +40,8 @@ public class TeacherDao {
 			System.out.println("접속성공");
 
 			StringBuffer query = new StringBuffer();
-			query.append("INSERT INTO teacher (code, name, resident_id, phone, email, YEAR, sal, major, address, account_number)");
+			query.append(
+					"INSERT INTO teacher (code, name, resident_id, phone, email, YEAR, sal, major, address, account_number)");
 			query.append("VALUES (teacher_seq.nextval,?,?,?,");
 			query.append("?,?,?,?,?,?)");
 
@@ -374,6 +383,68 @@ public class TeacherDao {
 		}
 
 		return result;
+	}
+
+	// 사진 저장하기
+	public int pictureIn(File fc, String code) throws FileNotFoundException {
+		PreparedStatement pstmt = null; // 쿼리문사용을위한
+		int result = 0; // insert할땐 반환값이 숫자 , 오라클에서 보면 삽입하면 '1행의 어쩌구 하고 앞에 1이 나옴'
+		try {
+
+			System.out.println("접속성공");
+
+			StringBuffer query = new StringBuffer();
+			query.append("UPDATE TEACHER SET TPICTURE = ? WHERE CODE = ?");
+
+			System.out.println(query);
+
+			FileInputStream fis = new FileInputStream(fc);
+			pstmt = conn.prepareStatement(query.toString());
+			pstmt.setBinaryStream(1, fis, (int) fc.length());
+			pstmt.setString(2, code);
+
+			result = pstmt.executeUpdate(); // insert할때는 처음에 반환값이 숫자이기때문에 esecuteQuery함수를 쓸수가없다
+			System.out.println(result + "행이 삽입되었습니다.");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return result;
+	}
+
+	// 사진 뿌려주기
+	public BufferedImage picturePrint(String code) throws IOException, SQLException {
+
+		PreparedStatement pstmt = null; // 쿼리문사용을위한
+		ResultSet rs = null; // 셀렉트문의 결과는 Resultset으로 옴
+
+		System.out.println("접속성공");
+		pstmt = conn.prepareStatement(
+				"SELECT t.TPICTURE FROM TEACHER t WHERE code = " + code + " AND NOT t.tpicture IS NULL ");
+		rs = pstmt.executeQuery();
+		rs.next();
+
+		if (rs.getRow() == 0) {
+			System.out.println("등록된 사진이 없습니다.");
+		} else {
+			System.out.println("등록된 사진이 있습니다.");
+			InputStream in = rs.getBinaryStream(1);
+			BufferedImage bi = ImageIO.read(in);
+			in.close();
+
+			return bi;
+		}
+
+		return null;
 	}
 
 }
