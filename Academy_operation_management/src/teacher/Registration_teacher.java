@@ -28,7 +28,6 @@ public class Registration_teacher extends JFrame {
 	public Registration_teacher() {
 		teacherService = new TeacherService(new TeacherDao());
 		setBounds(new Rectangle(0, 0, 1000, 0));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(669, 560);
 		setLocationRelativeTo(null);
 

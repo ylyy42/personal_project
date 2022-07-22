@@ -16,6 +16,7 @@ import javax.swing.table.DefaultTableModel;
 import database.admin.StudentsDao;
 import database.admin.StudentsFeeVo;
 import database.admin.StudentsService;
+import main.Main;
 
 public class Fee_students extends JFrame {
 	
@@ -28,7 +29,6 @@ public class Fee_students extends JFrame {
 	public Fee_students() {
 		studentsService = new StudentsService(new StudentsDao());
 		setBounds(new Rectangle(0, 0, 1000, 0));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(795, 560);
 		getContentPane().setLayout(null);
 		
@@ -80,6 +80,16 @@ public class Fee_students extends JFrame {
 		});
 		button.setBounds(637, 466, 103, 40);
 		getContentPane().add(button);
+		
+		Button button_1 = new Button("\uBA54\uC778");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Main();
+				dispose();
+			}
+		});
+		button_1.setBounds(637, 23, 103, 35);
+		getContentPane().add(button_1);
 		
 		setVisible(true);
 	}

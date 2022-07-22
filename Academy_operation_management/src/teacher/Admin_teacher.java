@@ -416,7 +416,7 @@ public class Admin_teacher extends JFrame {
 		pane.setLocation(15, 289);
 		pane.setSize(635, 191);
 
-		pane.addTab("담당강좌", pannel1);
+		pane.addTab("담당강의", pannel1);
 		pane.addTab("수강생현황", pannel2);
 		
 		return pane;

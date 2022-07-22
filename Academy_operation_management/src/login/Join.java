@@ -37,7 +37,6 @@ public class Join extends JFrame {
 	public Join() {
 		ManagerService managerService = new ManagerService(new ManagerDao());
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(430, 509);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();

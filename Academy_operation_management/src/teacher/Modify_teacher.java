@@ -121,9 +121,9 @@ public class Modify_teacher extends JFrame {
 		textField_8.setBounds(115, 333, 348, 21);
 		getContentPane().add(textField_8);
 		
-		JLabel lblNewLabel = new JLabel("\uD559\uC0DD\uC815\uBCF4\uC218\uC815");
+		JLabel lblNewLabel = new JLabel("\uC120\uC0DD\uB2D8 \uC815\uBCF4\uC218\uC815");
 		lblNewLabel.setFont(new Font("¸¼Àº °íµñ", Font.BOLD, 19));
-		lblNewLabel.setBounds(237, 35, 123, 26);
+		lblNewLabel.setBounds(225, 35, 151, 26);
 		getContentPane().add(lblNewLabel);
 		
 		Button button = new Button("\uC218\uC815\uC644\uB8CC");

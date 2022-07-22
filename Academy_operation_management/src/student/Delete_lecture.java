@@ -31,6 +31,8 @@ public class Delete_lecture extends JFrame {
 	private int lCode;
 	private int sCode = Admin_students.sCode;
 	private JTable jtable = Admin_students.jtable;
+	private Label label_1;
+	private Button button_1;
 	
 	public Delete_lecture() {
 		setBounds(new Rectangle(0, 0, 1000, 0));
@@ -53,7 +55,7 @@ public class Delete_lecture extends JFrame {
 		pannel1.setLayout(null);
 		jscp1 = new JScrollPane(jtable1);
 		jscp1.setBorder(null);
-		jscp1.setBounds(52, 43, 452, 402);
+		jscp1.setBounds(52, 71, 452, 374);
 		pannel1.add(jscp1);
 		
 		getContentPane().add(pannel1);
@@ -79,10 +81,19 @@ public class Delete_lecture extends JFrame {
 		button.setBounds(447, 460, 76, 23);
 		pannel1.add(button);
 		
-		Label label = new Label("\uAC15\uC88C\uC0AD\uC81C");
-		label.setFont(new Font("Dialog", Font.BOLD, 12));
-		label.setBounds(18, 11, 69, 23);
-		pannel1.add(label);
+		label_1 = new Label("\uAC15\uC88C\uC0AD\uC81C");
+		label_1.setFont(new Font("¸¼Àº °íµñ", Font.BOLD, 20));
+		label_1.setBounds(222, 28, 101, 23);
+		pannel1.add(label_1);
+		
+		button_1 = new Button("\uCDE8\uC18C");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		button_1.setBounds(428, 28, 76, 23);
+		pannel1.add(button_1);
 		setVisible(true);
 	}
 	

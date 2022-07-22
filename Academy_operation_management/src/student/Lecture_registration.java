@@ -47,7 +47,7 @@ public class Lecture_registration extends JFrame {
 		lecConts = studentsService.lecAdd();
 		jtable = new JTable(lecConts , tHeader);
 		JScrollPane jscp = new JScrollPane(jtable);
-		jscp.setBounds(0, 10, 553, 233);
+		jscp.setBounds(0, 0, 553, 243);
 		panel.add(jscp);
 		
 		Button button = new Button("\uB4F1\uB85D\uD558\uAE30");
@@ -75,14 +75,13 @@ public class Lecture_registration extends JFrame {
 		label.setBounds(284, 10, 101, 23);
 		getContentPane().add(label);
 		
-		Button button_1 = new Button("\uB4A4\uB85C\uAC00\uAE30");
+		Button button_1 = new Button("\uCDE8\uC18C");
 		button_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new Admin_students();
 				dispose();
 			}
 		});
-		button_1.setBounds(10, 10, 91, 31);
+		button_1.setBounds(554, 11, 91, 31);
 		getContentPane().add(button_1);
 		
 		setVisible(true);

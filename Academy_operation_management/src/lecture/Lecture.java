@@ -1,6 +1,10 @@
 package lecture;
 
+import java.awt.Button;
+import java.awt.Label;
 import java.awt.Panel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -10,10 +14,7 @@ import javax.swing.table.DefaultTableModel;
 
 import database.lecture.LectureDao;
 import database.lecture.LectureService;
-import java.awt.Label;
-import java.awt.Button;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import main.Main;
 
 public class Lecture extends JFrame {
 	
@@ -26,7 +27,6 @@ public class Lecture extends JFrame {
 	private String lCode;
 	
 	public Lecture() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(750, 500);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
@@ -78,6 +78,16 @@ public class Lecture extends JFrame {
 		});
 		button_1.setBounds(448, 402, 100, 30);
 		getContentPane().add(button_1);
+		
+		Button button_2 = new Button("\uBA54\uC778");
+		button_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Main();
+				dispose();
+			}
+		});
+		button_2.setBounds(586, 10, 92, 35);
+		getContentPane().add(button_2);
 		
 		setVisible(true);
 	}

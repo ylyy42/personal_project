@@ -71,6 +71,7 @@ public class Main extends JFrame {
 		btnNewButton_3_1_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new Lecture();
+				dispose();
 			}
 		});
 		btnNewButton_3_1_1.setBounds(612, 399, 182, 119);

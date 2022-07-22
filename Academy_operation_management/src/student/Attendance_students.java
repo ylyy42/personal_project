@@ -24,7 +24,6 @@ public class Attendance_students extends JFrame {
 	
 	public Attendance_students() {
 		setBounds(new Rectangle(0, 0, 1000, 0));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(795, 560);
 		getContentPane().setLayout(null);
 		setLocationRelativeTo(null);

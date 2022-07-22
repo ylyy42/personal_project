@@ -26,7 +26,6 @@ public class Score_students extends JFrame {
 	
 	public Score_students() {
 		setBounds(new Rectangle(0, 0, 1000, 0));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(517, 384);
 		getContentPane().setLayout(null);
 		studentsService = new StudentsService(new StudentsDao());
