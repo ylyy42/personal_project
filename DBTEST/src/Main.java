@@ -40,7 +40,7 @@ public class Main {
 
 		// U(update)
 		vo = memberService.read(1);
-		System.out.println(vo);
+		System.out.println(vo + "-------------------");
 
 		if (vo != null) {
 			vo.setMemberPw("4321");
